@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SCHOOL RUSH</title>
+<meta name="theme-color" content="#16204a">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="SCHOOL RUSH">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/intro.css"></head><body class="idx">
+<script src="js/intro.js"></script>
+<canvas id="cv"></canvas><div id="msg" class="p"></div>
+<div id="menu"><div id="tr"><button id="qx" title="Keluar">Keluar</button><button id="fs" title="Skrin penuh"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 9V3h6M15 3h6v6M21 15v6h-6M9 21H3v-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></div>
+<div id="vm" class="v"><div id="bellw"><svg id="bell" viewBox="0 0 100 100"><path d="M50 8c-4 0-7 3-7 7-14 4-22 16-22 32v14L12 74h76l-9-13V47c0-16-8-28-22-32 0-4-3-7-7-7z" fill="#ffd23f" stroke="#c9a000" stroke-width="3"/><circle cx="50" cy="84" r="8" fill="#c9a000"/></svg><div id="rg">Ringg!!!</div></div>
+<div id="brand"><h1 class="logo"><img src="assets/brand/school-rush-logo.webp" width="900" height="588" alt="SCHOOL RUSH: Hero Kampus?" draggable="false"></h1><div id="sub">Kejar loceng, jangan lewat!</div></div>
+<div id="acts"><button id="mC" class="big" hidden>Teruskan</button>
+<div class="r2"><button id="mK" class="big">Mod Kelas</button><button id="mR" class="big">Mod Jalan-jalan</button></div>
+<div class="r2 rs"><button id="mS" class="sm">Tetapan</button><button id="mH" class="sm">Cara Main</button><button id="mL" class="sm">Lencana</button><button id="mKr" class="sm">Kredit</button></div>
+<div id="mt"></div></div>
+<div id="bookw"><svg viewBox="0 0 120 90"><path d="M8 20h40l8 10h56v52H8z" fill="#e8920c"/><rect x="8" y="34" width="104" height="48" rx="3" fill="#ffc94d"/></svg><span>Math!</span></div></div>
+<div id="vs" class="v" hidden><div id="slh"><b>Pilih slot simpanan</b><small id="sls"></small></div><div id="sl"></div><div class="r2"><button id="slb">Kembali</button></div></div>
+<div id="vn" hidden><div id="nmb"><label for="nm">Nama anda</label><input id="nm" maxlength="12" placeholder="Masukkan nama.." autocomplete="off"><small>Guna nama panggilan sahaja ya!</small><div id="lvb" class="ops"><span>Tahap belajar</span><button data-lv="mudah">Mudah</button><button data-lv="sederhana" class="on">Sederhana</button><button data-lv="sukar">Sukar</button></div></div>
+<div id="stg"><span class="lbl" style="left:25%">Lelaki</span><span class="lbl" style="left:75%">Perempuan</span></div>
+<div id="cpw"><div id="cp"></div><div class="r2"><button id="bk">Kembali</button><button id="go" disabled>Jom Mula!</button></div></div></div>
+</div>
+<div id="ld"><div class="sp"></div><div id="tip"></div></div>
+<div id="rt"><div class="ph"></div><h2 style="margin:0 0 .3em">Putar telefon anda</h2><p style="margin:0 0 1em">Lebih seronok main dalam mod mengufuk!</p><button id="rtk" style="font:inherit;padding:.6em 1.2em;border-radius:1em;border:0;background:#ffd23f;color:#1c2f6b;font-weight:700">Kekal menegak</button></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){const L=["js/core.js", "js/chars.js", "js/ui.js", "js/audio.js", "js/menu.js"];function go(){if(typeof THREE==='undefined'){var d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#16204a;color:#fff;font:600 18px sans-serif;text-align:center;padding:20px';d.innerHTML='<div>Tak dapat memuatkan game.<br>Semak internet, kemudian cuba lagi.</div><button style="font:inherit;padding:.6em 1.4em;border:0;border-radius:1em;background:#ffd23f;color:#1c2f6b;font-weight:700" onclick="location.reload()">Cuba lagi</button>';document.body.appendChild(d);return}let i=0;(function nx(){if(i>=L.length)return;const s=document.createElement('script');s.src=L[i++];s.onload=nx;document.head.appendChild(s)})()}
+document.fonts.load('700 32px Fredoka').catch(function(){}).then(go)})();
+</script></body></html>

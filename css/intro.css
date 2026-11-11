@@ -1,0 +1,7 @@
+/* LAH? publisher splash. Self-contained: delete this file and js/intro.js (and their two tags in index.html) to remove it. */
+#lah{position:fixed;inset:0;z-index:100;background:#fed221;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .3s ease;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#lah img{width:min(64vmin,420px);height:auto;opacity:0;transition:opacity .3s ease;pointer-events:none;-webkit-user-drag:none;user-select:none}
+#lah.in img{opacity:1}
+#lah.out{opacity:0;pointer-events:none}
+#lah.fast{transition-duration:.15s}
+#lahskip{position:absolute;right:max(.9rem,env(safe-area-inset-right,0px));bottom:max(.9rem,env(safe-area-inset-bottom,0px));font:600 14px Fredoka,"Trebuchet MS",system-ui,sans-serif;color:#1a1a1a;background:rgba(0,0,0,.12);border:0;border-radius:999px;padding:.45em 1em;cursor:pointer}

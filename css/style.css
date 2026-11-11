@@ -1,0 +1,260 @@
+:root{--bg:#bfe3f5;--fg:#17202b;--pn:rgba(255,255,255,.9);--ac:#2f6fd0;--ln:#b9c4d2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--fg:#eef2f7;--pn:rgba(31,37,44,.9);--ac:#6aa5ff;--ln:#38414b}}
+:root[data-theme="dark"]{--fg:#eef2f7;--pn:rgba(31,37,44,.9);--ac:#6aa5ff;--ln:#38414b}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--fg);font-family:Fredoka,"Trebuchet MS","Segoe UI",Roboto,sans-serif;font-size:calc(clamp(12px,1vw + 9px,18px)*var(--ts,1));touch-action:none;user-select:none;-webkit-user-select:none}
+body{position:relative}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.p{position:absolute;background:var(--pn);border:1px solid var(--ln);border-radius:.6em;padding:.45em .8em}
+#hud{top:.6em;left:.6em;display:flex;gap:.7em;align-items:center}
+button{font:inherit;color:var(--fg);background:transparent;border:1px solid var(--ln);border-radius:.5em;padding:.3em .7em;cursor:pointer}
+#hint{bottom:22%;left:50%;transform:translateX(-50%);font-weight:bold;display:none;white-space:nowrap}
+#msg{top:3.6em;left:50%;transform:translateX(-50%);display:none;max-width:86%;text-align:center}
+#help{bottom:.6em;left:.6em;font-size:.85em}
+#stt{font-weight:700;color:#e8730c}#wc{display:none}
+#bub{display:none;transform:translate(-50%,-100%);white-space:nowrap;font-weight:600;pointer-events:none;z-index:5;background:#fff;color:#111;border:2px solid #111;border-radius:.8em;margin-top:-.6em}
+#bub::after{content:"";position:absolute;left:50%;bottom:-.55em;width:.8em;height:.8em;background:#fff;border-right:2px solid #111;border-bottom:2px solid #111;transform:translateX(-50%) rotate(45deg)}
+#jz{position:absolute;left:0;bottom:0;width:55%;height:62%}
+#jb{position:absolute;width:100px;height:100px;border-radius:50%;border:2px solid var(--ac);background:var(--pn);display:none;opacity:.8}
+#jk{position:absolute;left:30px;top:30px;width:40px;height:40px;border-radius:50%;background:var(--ac)}
+#tb{position:absolute;right:4vmin;bottom:5vmin;display:flex;flex-direction:column;gap:3vmin}
+#tb button{width:19vmin;height:19vmin;border-radius:50%;background:var(--pn);border:2px solid var(--ac);font-weight:bold;font-size:1.1em;padding:0}
+body:not(.touch) #tb,body:not(.touch) #jz{display:none}.touch #help{display:none}
+#menu,#ld,#rt{position:absolute;inset:0;z-index:20;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:.8em;box-sizing:border-box;color:#fff}
+#menu{background:radial-gradient(circle at 50% 30%,rgba(47,111,208,.62),rgba(16,32,80,.94));overflow:auto;justify-content:flex-start}
+#menu.pz{background:rgba(10,20,50,.82)}
+#ld{background:#1c2f6b;z-index:30;font-weight:600}#rt{background:#1c2f6b;z-index:40}
+.v{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;flex:1;min-height:0;gap:.6em;position:relative}
+.logo{margin:0;line-height:0;width:clamp(240px,72vw,460px);max-width:92vw}.logo img{display:block;width:100%;height:auto;max-height:36vh;object-fit:contain}
+#brand,#acts{display:contents}
+#sub{opacity:.9;margin-bottom:.4em}
+#menu button{font:inherit;font-size:1.05em;padding:.6em 1em;border-radius:1em;border:0;background:#ffd23f;color:#1c2f6b;font-weight:700;cursor:pointer}
+#menu button:disabled{opacity:.45;cursor:default}#menu button.on{outline:3px solid #fff}
+.r2{display:flex;gap:.5em;flex-wrap:wrap;justify-content:center;width:min(94vw,34em)}.r2 button{flex:1;min-width:6em}
+#menu .big{font-size:1.25em;padding:.8em 1em}#menu .sm{font-size:.95em}.soon{opacity:.8}
+#vm{padding-top:clamp(40px,10vw,90px)}
+#bellw{position:absolute;top:0;left:1%;width:clamp(56px,14vw,120px);cursor:pointer}
+#bell{width:100%;display:block;transform-origin:50% 8%;animation:sw 1.2s ease-in-out infinite}
+@keyframes sw{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+#rg{font-weight:700;color:#ffd23f;font-size:clamp(14px,3.4vw,26px);transform:rotate(-8deg);animation:pp .6s ease-in-out infinite alternate}
+@keyframes pp{to{transform:rotate(-3deg) scale(1.12)}}
+#bookw{position:absolute;right:1%;bottom:0;width:clamp(70px,16vw,140px);pointer-events:none;animation:bb 2s ease-in-out infinite}
+#bookw svg{width:100%;display:block}#bookw span{display:block;font-weight:700;color:#ffd23f;transform:rotate(6deg)}
+@keyframes bb{50%{transform:translateY(-.4em)}}
+#mt{min-height:1.4em;opacity:0;transition:opacity .3s;color:#ffd23f;font-weight:600}
+#fs{position:absolute;top:.6em;right:.6em;z-index:5;width:2.6em;height:2.6em;padding:0!important;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.2)!important;color:#fff!important}
+#vn{display:grid;grid-template-rows:auto 1fr auto;grid-template-areas:"n" "s" "p";width:100%;flex:1;min-height:0;gap:.5em}
+#nmb{grid-area:n;display:flex;flex-direction:column;gap:.2em;align-items:center}
+#nm{font:inherit;font-size:1.25em;text-align:center;padding:.4em;border-radius:.8em;border:3px solid #ffd23f;background:#fff;color:#111;width:min(80vw,18em)}
+#stg{grid-area:s;position:relative;min-height:9em}
+.lbl{position:absolute;bottom:.3em;transform:translateX(-50%);font-weight:700;background:rgba(0,0,0,.35);padding:.1em .7em;border-radius:1em}
+#cpw{grid-area:p;display:flex;flex-direction:column;gap:.4em;width:min(96vw,40em);justify-self:center}
+#cp{background:rgba(10,20,60,.88);border-radius:1em;padding:.5em;max-height:32vh;overflow:auto;text-align:left}
+.ops{display:flex;flex-wrap:wrap;gap:.35em;margin:.2em 0}.ops button{padding:.35em .7em!important;font-size:.9em!important}
+#menu .sw{width:2em;height:2em;border-radius:50%;border:3px solid transparent;padding:0}#menu .sw.on{border-color:#fff;outline:0}
+.lb{font-size:.8em;opacity:.8}.hn{text-align:center;opacity:.9;padding:.8em}
+@media(orientation:landscape) and (max-height:560px){#vn{grid-template-columns:1.2fr 1fr;grid-template-rows:auto 1fr;grid-template-areas:"s n" "s p"}#cp{max-height:40vh}}
+.sc{width:min(94vw,36em);max-height:62vh;overflow:auto;text-align:left}.sc h3{margin:.8em 0 .1em;color:#ffd23f}.sc p{margin:0;opacity:.95}
+.row{display:flex;justify-content:space-between;align-items:center;gap:1em;width:min(94vw,30em)}.row .ops{margin:0}
+#bg{display:grid;grid-template-columns:repeat(auto-fit,minmax(8em,1fr));gap:.6em;margin:.3em 0;width:min(94vw,36em)}
+.bd{background:rgba(255,255,255,.14);border-radius:.8em;padding:.6em}
+.bd i{display:block;width:2.4em;height:2.4em;margin:0 auto .3em;background:#6b7390;clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.bd.on i{background:#ffd23f}.bd b{display:block}.bd small{opacity:.75}
+.sp{width:3.2em;height:3.2em;border:.35em solid rgba(255,255,255,.3);border-top-color:#ffd23f;border-radius:50%;animation:rt 1s linear infinite;margin-bottom:1em}@keyframes rt{to{transform:rotate(360deg)}}
+.ph{width:3.5em;height:6em;border:.3em solid #ffd23f;border-radius:.6em;margin-bottom:1em;animation:rp 2s ease-in-out infinite}@keyframes rp{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+.lh #jz{left:auto;right:0}.lh #tb{right:auto;left:4vmin}
+[hidden]{display:none!important}
+body.mn #hud,body.mn #mm,body.mn #help,body.mn #hint,body.mn #msg,body.mn #bub,body.mn #jz,body.mn #tb{display:none!important}
+#mm{inset:.6em .6em auto auto;width:min(34vw,160px);height:min(34vw,160px);border:2px solid var(--ln);border-radius:.6em;background:var(--pn)}
+#hud{position:absolute;background:none;border:0;padding:0;flex-wrap:wrap;max-width:calc(100% - min(34vw,160px) - 2.2em)}.hp{background:var(--pn);border:1px solid var(--ln);border-radius:.6em;padding:.45em .8em;font-weight:700;color:var(--fg);line-height:1}#ex.hp{padding:.5em .6em;display:flex;cursor:pointer}
+/* --- start screen backdrop: body.idx is the base, body.st (character select) lets the 3D characters show without the tinted overlay --- */
+body.idx{background:#16204a}
+body.st{background:radial-gradient(circle at 50% 30%,#25519d,#102050)}
+body.st #menu{background:none}
+/* --- compact layout for short, wide screens (phones in landscape). Portrait and large screens are unchanged --- */
+@media(orientation:landscape) and (max-height:560px){
+#vm{flex-direction:row;justify-content:center;align-items:center;gap:3vw;padding:2.6em 3vw .6em}
+#brand{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1 1 0;min-width:0;gap:.3em}
+#acts{display:flex;flex-direction:column;align-items:stretch;justify-content:center;flex:1 1 0;min-width:0;max-width:24em;gap:.5em}
+.logo{width:min(100%,calc(54vh*1.531))}.logo img{max-height:none}
+#sub{margin:0;font-size:.95em}
+#acts .r2{width:100%;flex-wrap:nowrap;gap:.45em}#acts .r2 button{min-width:0}
+#acts .rs{display:grid;grid-template-columns:1fr 1fr}
+#menu .big{font-size:1.02em;padding:clamp(.6em,4vh,1em) .4em}#menu .sm{font-size:.85em;padding:clamp(.5em,3.4vh,.85em) .3em}
+#mt{min-height:1.2em;font-size:.9em}
+#bellw{left:.7em;width:clamp(34px,6vw,48px)}#rg{font-size:11px;white-space:nowrap}
+#bookw{display:none}
+}
+/* --- character select in landscape: the options panel had a fixed 40em width that squeezed the 3D stage to ~140px --- */
+@media(orientation:landscape) and (max-height:560px){
+#vn{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+#cpw{width:100%;min-width:0}#cpw .r2{width:100%}
+#nmb{padding-right:3.2em;box-sizing:border-box;min-width:0;width:100%}#nm{width:100%;max-width:18em;box-sizing:border-box}
+}
+/* --- world.html minimap: smaller on short, wide screens (phones in landscape) --- */
+@media(orientation:landscape) and (max-height:560px){
+#mm{width:clamp(84px,30vh,120px);height:clamp(84px,30vh,120px)}
+#hud{max-width:calc(100% - clamp(84px,30vh,120px) - 2.2em)}
+}
+
+/* --- Round 4: Mod Kelas (story mode) --- */
+#stm,#scr{white-space:nowrap}#stm.near{background:#ffd23f;color:#7a2a00;animation:nr .5s ease-in-out infinite alternate}#stm.late{background:#e24b4b;color:#fff}
+@keyframes nr{to{transform:scale(1.08)}}
+#room{position:absolute;inset:0;z-index:25;display:none;align-items:center;justify-content:center;flex-direction:column;gap:.6em;text-align:center;padding:.8em;box-sizing:border-box;color:#fff;background:radial-gradient(circle at 50% 30%,rgba(47,111,208,.8),rgba(16,32,80,.96))}
+#room h2{margin:0;font-size:1.6em}#room p{margin:0;max-width:30em;opacity:.95}#room .rs2{color:#ffd23f;font-weight:700}
+#room .rk{display:flex;gap:.5em;flex-wrap:wrap;justify-content:center;margin-top:.4em}
+#room button{font:inherit;font-size:1.1em;padding:.6em 1.4em;border-radius:1em;border:0;background:#ffd23f;color:#1c2f6b;font-weight:700;cursor:pointer}
+@media(orientation:landscape) and (max-height:560px){#room{gap:.3em}#room h2{font-size:1.25em}#room button{padding:.45em 1.1em}}
+/* --- Tetapan fits phone landscape (more rows after Round 4): scrollable from the top, tighter rows --- */
+@media(orientation:landscape) and (max-height:560px){
+#vt{justify-content:flex-start;gap:.15em;padding:2.4em 0 .6em;flex:none;min-height:100%;box-sizing:border-box}
+#vt h2{font-size:1.2em}#vt .row{gap:.6em}#vt .ops{gap:.25em}#vt .ops button{padding:.18em .6em!important;font-size:.82em!important}
+#vt .bkb{padding:.4em 1.2em}
+}
+
+/* --- Round 5: analog clock + school bell (Mod Kelas only). --mm mirrors the minimap size so they scale together --- */
+:root{--mm:min(34vw,160px);--ck:calc(var(--mm)*.62)}
+@media(orientation:landscape) and (max-height:560px){:root{--mm:clamp(84px,30vh,120px)}}
+#ck{inset:auto;position:absolute;right:.6em;top:calc(.6em + var(--mm) + .35em);width:var(--ck);height:var(--ck);z-index:2;pointer-events:none}
+#bl{position:absolute;right:calc(.6em + var(--ck) + .4em);top:calc(.6em + var(--mm) + .35em + var(--ck)*.5 - var(--mm)*.17);width:calc(var(--mm)*.34);height:calc(var(--mm)*.34);z-index:2;pointer-events:none;opacity:.7;transform-origin:50% 10%}
+#bl svg{width:100%;height:100%;display:block}
+#bl.on{opacity:1;filter:drop-shadow(0 0 6px #ffd23f);animation:blg 1.4s ease-in-out infinite alternate}
+#bl.ring{opacity:1;animation:bls .16s ease-in-out infinite alternate,blp .45s ease-in-out infinite alternate}
+#bl.late{opacity:1;filter:drop-shadow(0 0 8px #e24b4b);animation:blg .5s ease-in-out infinite alternate}
+@keyframes bls{from{transform:rotate(-22deg)}to{transform:rotate(22deg)}}
+@keyframes blp{from{filter:drop-shadow(0 0 4px #ffd23f)}to{filter:drop-shadow(0 0 16px #fff3a0) drop-shadow(0 0 8px #ffd23f)}}
+@keyframes blg{from{filter:drop-shadow(0 0 3px #ffd23f)}to{filter:drop-shadow(0 0 9px #ffd23f)}}
+body.mn #ck,body.mn #bl{display:none!important}
+/* Round 6: Keluar button (start screen) and the "how to close" card */
+#tr{position:absolute;top:.6em;right:.6em;z-index:5;display:flex;gap:.4em;align-items:center}
+#tr #fs{position:static}
+#qx{height:2.6em;padding:0 .9em!important;display:none;align-items:center;justify-content:center;background:rgba(255,255,255,.2)!important;color:#fff!important}
+#qm{position:absolute;inset:0;z-index:35;display:none;align-items:center;justify-content:center;flex-direction:column;gap:.6em;text-align:center;padding:.8em;box-sizing:border-box;color:#fff;background:rgba(10,20,50,.92)}
+#qm h2{margin:0;font-size:1.5em}#qm p{margin:0;max-width:28em;opacity:.95}
+#qm button{font:inherit;font-size:1.1em;padding:.5em 1.6em;border-radius:1em;border:0;background:#ffd23f;color:#1c2f6b;font-weight:700;cursor:pointer}
+
+/* --- Round 7: grades (Lencana + Kad Laporan), end card scrolls on small screens, Kantin room and its mini games --- */
+#room{overflow:auto;justify-content:flex-start}#room>:first-child{margin-top:auto}#room>:last-child{margin-bottom:auto}
+.gAP{color:#ffd23f}.gA{color:#5ccf4a}.gB{color:#6fb6ff}.gC{color:#ffa94d}.gD{color:#ff7b7b}.gN{color:#9aa3bd}.gBP{color:#4fd2c2}.gF{color:#ff5d5d}
+#lvb{flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;font-size:.85em;margin-top:.2em}#lvb span{font-weight:700;margin-right:.3em}#lvb button.on,#vt [data-tl].on{background:#ffd23f!important;color:#1c2f6b!important;outline:0}
+.grg{display:grid;grid-template-columns:repeat(auto-fit,minmax(10em,1fr));gap:.4em;margin-top:.4em}
+.gr1{display:flex;align-items:center;justify-content:space-between;gap:.6em;background:rgba(255,255,255,.14);border-radius:.8em;padding:.4em .7em}
+.gr1 span{display:block;font-weight:600}.gr1 small{display:block;opacity:.75;font-size:.75em;font-weight:400}.gr1 b{font-size:1.5em;line-height:1}
+.gr1.big b{font-size:2em}
+.rc{display:grid;grid-template-columns:repeat(3,1fr);gap:.3em;width:min(92vw,28em)}
+.rc .gr1{flex-direction:column;gap:.1em;padding:.3em .4em;font-size:.85em;text-align:center}.rc .gr1 b{font-size:1.4em}
+#lt{justify-content:center}
+.sb{position:absolute;display:none;transform:translate(-50%,-100%);white-space:nowrap;font-weight:600;pointer-events:none;z-index:4;background:#fff;color:#111;border:2px solid #111;border-radius:.8em;padding:.25em .6em;font-size:.85em}
+body.mn .sb{display:none!important}
+#kov{position:absolute;inset:0;z-index:25;display:none;align-items:center;justify-content:center;padding:.5em;box-sizing:border-box;color:#fff;text-align:center;background:radial-gradient(circle at 50% 30%,rgba(47,111,208,.88),rgba(16,32,80,.97))}
+.kcd{max-width:34em;width:100%;max-height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:.35em}.kcd.wd{max-width:46em}
+.kcd h2{margin:0;font-size:1.8em}.kcd h3{margin:0;font-size:1.15em;color:#ffd23f}.kcd p{margin:0}.kcd .kh{opacity:.85;font-size:.9em}
+.kcd button{font:inherit;font-size:1em;padding:.5em 1em;border-radius:1em;border:0;background:#ffd23f;color:#1c2f6b;font-weight:700;cursor:pointer}
+.kcd button.kx{background:rgba(255,255,255,.2);color:#fff;padding:.3em 1em;font-size:.9em}
+.kcd .it{background:#fff;color:#1c2f6b;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;padding:.25em .2em;line-height:1.1;font-size:1.6em;border-radius:.6em}
+.kcd .it small{display:block;font-size:.38em;font-weight:600}.kcd .it.s{outline:3px solid #ffd23f;background:#fff4c2}
+.gh{position:fixed;pointer-events:none;z-index:99;transform:translate(-50%,-50%);opacity:.9;background:#fff;color:#1c2f6b;border:0;border-radius:.6em;padding:.25em .4em;font:inherit;font-size:1.6em;line-height:1.1}.gh small{display:block;font-size:.38em;font-weight:600}
+.gm{display:grid;gap:.5em;width:100%;grid-template-columns:1.1fr 1fr;align-items:center}.gm>div{min-width:0}
+.inv{display:grid;grid-template-columns:repeat(4,1fr);gap:.3em;align-content:start}.inv2 .it{font-size:2.1em}
+.py2{display:block;width:min(100%,24em,52vh);margin:0 auto}.py2 polygon{cursor:pointer}.py2 text{pointer-events:none}
+.pl{display:block;overflow:visible;width:min(100%,18em,48vh);margin:0 auto}.pl path{cursor:pointer}.pl text{pointer-events:none}
+.pp{transform-box:fill-box;transform-origin:center;animation:ppo .4s}@keyframes ppo{0%{transform:scale(0) translateY(-40px)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.sk{animation:skk .3s}@keyframes skk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media(prefers-reduced-motion:reduce){.pp,.sk{animation:none}}
+.lg2{display:grid;grid-template-columns:1fr 1fr;gap:.1em .5em;text-align:left;font-size:.62em;line-height:1.2;margin-top:.3em}
+.cb{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;max-width:14em;margin:.3em auto;min-height:1.5em}.cb i{width:1.3em;height:1.3em;background:#fff;border:2px solid #555;box-shadow:inset -3px -3px 0 #ccc}.cb small{font-size:.9em}
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:.3em;width:100%}.tl button{padding:.3em .2em;font-size:.85em}.tl button.s{background:#5ccf4a;color:#10381a}
+.rw{display:flex;flex-wrap:wrap;gap:.3em;justify-content:center}.hw{text-align:left;margin:.2em auto;font-size:.9em;max-width:22em}
+#gc{position:static;inset:auto;width:auto;height:auto;display:block;touch-action:none;border-radius:.5em;background:#9ad7ff;max-width:100%} /* overrides the global canvas rule, which pulled this canvas out of its card */#kfb{min-height:1.3em;font-size:.9em}
+@media(max-width:559px){.gm{grid-template-columns:1fr}}
+@media(orientation:landscape) and (max-height:560px){.kcd{font-size:.88em}.kcd h2{font-size:1.4em}.kcd h3{font-size:1em}.py2{width:min(100%,24em,58vh)}.pl{width:min(100%,18em,54vh)}}
+
+/* --- Round 7c: jump icon, centred character page buttons --- */
+#bj svg{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;display:block;margin:auto;pointer-events:none}
+#cpw .r2{width:100%;align-self:stretch}
+
+/* --- Round 9: Padang Balapan stage HUD (top bar, big L / R / LOMPAT buttons, countdown banner). Only shown while a mini game runs (body.sg). --- */
+#sh{position:absolute;top:calc(env(safe-area-inset-top,0px) + .5em);left:.6em;right:.6em;display:flex;flex-wrap:wrap;gap:.4em;align-items:center;justify-content:space-between;z-index:5;pointer-events:none}
+#sh>*{pointer-events:none;margin:0}#sh #sx{pointer-events:auto;cursor:pointer}
+#stm2{font-variant-numeric:tabular-nums;min-width:5.5em;text-align:center}
+.sbtn{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 5vmin);width:26vmin;height:26vmin;max-width:150px;max-height:150px;border-radius:50%;background:var(--pn);border:3px solid var(--ac);color:inherit;font:700 2.4em/1 Fredoka,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;z-index:6}
+.sbtn[hidden]{display:none!important}
+#sL{left:5vmin}#sR{right:5vmin}
+#sJ{left:50%;transform:translateX(-50%);width:42vmin;max-width:230px;height:22vmin;max-height:120px;border-radius:2em;font-size:1em;gap:.1em}
+#sJ svg{width:1.6em;height:1.6em;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}#sJ span{font-weight:700;font-size:1em;pointer-events:none}
+.sbtn.dn{background:var(--ac);color:#fff}#sL.dn,#sR.dn{transform:scale(.93)}#sJ.dn{transform:translateX(-50%) scale(.95)}
+#cd{position:absolute;top:36%;left:50%;transform:translate(-50%,-50%);display:none;z-index:5;pointer-events:none;white-space:nowrap;font-weight:700;font-size:min(3em,11vw);color:#fff;text-shadow:0 .06em .18em rgba(0,0,0,.65)}
+#sL svg,#sR svg{width:1.7em;height:1.7em;fill:currentColor;pointer-events:none}#sJ.nr{width:30vmin;max-width:170px}
+#sHt{flex:0 0 100%;order:5;pointer-events:none;text-align:left}#sHt .hp{display:inline-block;padding:.4em .5em .45em 1.55em;border:0;border-radius:.3em;color:#1c2f6b;font-weight:700;line-height:1.3;background:linear-gradient(90deg,transparent 1.1em,#e24b4b 1.1em,#e24b4b 1.17em,transparent 1.17em),repeating-linear-gradient(#fff8e1 0,#fff8e1 1.22em,#a9c7ea 1.22em,#a9c7ea 1.3em);box-shadow:0 2px 5px rgba(0,0,0,.3)} /* Round 15c4: same notebook-paper look as the HUD note #hdn */#sHt[hidden]{display:none!important}
+body:not(.sg) #sh,body:not(.sg) .sbtn,body:not(.sg) #cd{display:none!important}
+body.sg #hud,body.sg #mm,body.sg #help,body.sg #hint,body.sg #bub,body.sg #jz,body.sg #tb{display:none!important}
+body.sg #msg{top:3.4em}
+@media(max-width:559px){#sh #sn{order:1;flex:1 1 auto}#sh #sx{order:2}#sh #sHt{order:3}#sh #stm2,#sh #sd{order:4;flex:1 1 40%;text-align:center;min-width:0}}
+
+/* --- Round 9e: save slot screen (6 slots) --- */
+#vs{gap:.7em;padding:.6em 0}
+#slh{display:flex;flex-direction:column;gap:.1em;align-items:center}#slh b{font-size:1.3em}#slh small{opacity:.85}
+#sl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55em;width:min(94vw,40em)}
+@media(orientation:portrait){#sl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.slc{display:flex;flex-direction:column;gap:.12em;align-items:center;justify-content:center;min-height:5.6em;padding:.5em .4em;border-radius:1em;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.35);cursor:pointer;text-align:center;overflow:hidden;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.slc.em{border-style:dashed;background:rgba(255,255,255,.07)}.slc:focus-visible{outline:3px solid #ffd23f}
+.slc b{font-size:1.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.slc small{font-size:.78em;opacity:.9;line-height:1.2}.slc .sn{font-size:.72em;opacity:.8}
+#menu .slc button.sd{font-size:.72em;padding:.25em .8em;margin-top:.2em;background:rgba(255,255,255,.2);color:#fff;border-radius:.8em}
+@media(orientation:landscape) and (max-height:560px){#vs{gap:.35em;padding:.2em 0}#sl{width:min(94vw,44em);gap:.4em}.slc{min-height:4.1em;padding:.3em .3em}#slh b{font-size:1.1em}}
+
+/* Round 10h3: Tahap belajar buttons (setup + Tetapan) looked identical selected or not (all menu buttons are yellow). Unselected = dimmed, selected = white outline. */
+#lvb button:not(.on),#vt [data-tl]:not(.on){opacity:.5}
+#lvb button.on,#vt [data-tl].on{opacity:1;outline:3px solid #fff!important}
+/* Round 10h3b: Tahap belajar row 120% bigger (0.85em -> 1.02em, buttons scale with it) and moved down from the name hint */
+#lvb{font-size:1.02em;margin-top:.9em}
+
+/* --- Round 15: HUD plate (js/hud.js). Old ids #mdl #ex #stm #scr #wc #stt are kept and moved into the new layout --- */
+#hud{flex-direction:column;align-items:flex-start;flex-wrap:nowrap;gap:.4em}
+#hdr1{display:flex;align-items:center;gap:.45em}
+#hdp{display:flex;align-items:center;background:rgba(20,26,38,.92);border:2px solid #cfd6e2;border-radius:.9em;padding:.3em .8em .3em 0;color:#fff;min-width:0;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+#hdav{width:3.3em;height:3.3em;flex:0 0 auto;margin:-.3em .5em -.3em -.4em;border-radius:50%;border:.2em solid #e8dca0;overflow:hidden;background:#9fd0ee;box-sizing:border-box}
+#hdav svg{display:block;width:100%;height:100%}
+#hdpl{display:flex;flex-direction:column;gap:.12em;min-width:0}
+#hdnm{color:#ffd23f;font-size:.95em;line-height:1.05;max-width:6.2em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#hdpr,#hdrm{display:flex;align-items:center;gap:.35em;font-size:.8em;font-weight:700;line-height:1.1;white-space:nowrap}
+#hdpr[hidden]{display:none}
+.hdi{font-style:normal;font-size:.95em}
+#hdbt{display:flex;flex-direction:column;gap:.25em}
+#hdbt .hp{padding:.35em .5em;display:flex;align-items:center;justify-content:center;cursor:pointer}
+#hdbt svg{width:1.25em;height:1.25em}
+#hud .hdmd{background:rgba(20,26,38,.85);color:#fff;border:1px solid #cfd6e2;border-radius:.5em;padding:.3em .6em;font-size:.72em;letter-spacing:.04em;line-height:1}
+#hdn{display:flex;flex-direction:column;width:max-content;min-width:8.5em;max-width:100%;box-sizing:border-box;padding:.3em .5em .35em 1.55em;border-radius:.3em;color:#1c2f6b;font-weight:700;font-size:.78em;line-height:1.3;background:linear-gradient(90deg,transparent 1.1em,#e24b4b 1.1em,#e24b4b 1.17em,transparent 1.17em),repeating-linear-gradient(#fff8e1 0,#fff8e1 1.22em,#a9c7ea 1.22em,#a9c7ea 1.3em);box-shadow:0 2px 5px rgba(0,0,0,.3)}
+#hdn .hdnh{font-size:.8em;letter-spacing:.12em;color:#c0392b}
+#hdnt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hdx{display:flex;flex-wrap:wrap;gap:.45em;align-items:center}
+#hdx:empty{display:none}
+@media(orientation:landscape) and (max-height:560px){#hud{gap:.25em}#hdav{width:2.6em;height:2.6em}#hdp{font-size:.88em}#hdn{font-size:.68em}#hud .hdmd{font-size:.64em;padding:.25em .5em}#hdx .hp{font-size:.85em}}
+
+/* --- Round 15a: HUD 120% (plate, buttons, MOD line, Catatan); the old pills keep their size. Landscape phones 110% --- */
+#hdr1{font-size:1.2em}#hdn{font-size:.94em}#hud .hdmd{font-size:.86em}
+@media(max-width:400px){#hdnm{max-width:4.4em}}
+@media(orientation:landscape) and (max-height:560px){#hdr1{font-size:1.1em}#hdn{font-size:.75em}#hud .hdmd{font-size:.7em}}
+
+/* --- Round 15a2: portrait is a rounded square inside the plate, same style as the plate --- */
+#hdav{border-radius:.7em;border-width:.15em;margin:0 .55em 0 .3em}
+/* Round 16: school bag panel, shop menus (js/bag.js) and the effect chip under the pause button */
+#hdbt{position:relative}
+#bgxe{display:none;position:absolute;left:0;top:100%;margin-top:.25em;white-space:pre;background:#fff8e1;color:#1c2f6b;border:2px solid #1c2f6b;border-radius:.8em;padding:.2em .5em;font-size:.8em;font-weight:700;line-height:1.25;pointer-events:none}
+#bgxp{position:fixed;inset:0;z-index:18;display:flex;align-items:center;justify-content:center;background:rgba(10,20,50,.55);padding:3vmin}
+.bgxc{width:min(94vw,26em);max-height:88vh;overflow:auto;background:#fff8e1;color:#1c2f6b;border-radius:1em;padding:.8em .9em;box-shadow:0 8px 28px rgba(0,0,0,.5);font-weight:600}
+.bgxc h3{margin:0 0 .3em;font-size:1.25em;text-align:center}
+.bgxm{text-align:center;font-weight:700;margin-bottom:.4em;color:#9a5a00}
+.bgxr{display:flex;align-items:center;gap:.5em;padding:.4em 0;border-top:1px solid #e4d6a8}
+.bgxi{font-size:1.7em;line-height:1;width:1.3em;text-align:center}
+.bgxt{flex:1;display:flex;flex-direction:column;min-width:0}
+.bgxt small{font-weight:600;opacity:.75;font-size:.78em;line-height:1.2}
+.bgxq{font-weight:700;white-space:nowrap}
+.bgxr button,.bgxx{font:inherit;font-weight:700;border:0;border-radius:.7em;padding:.5em .9em;background:#ffd23f;color:#1c2f6b;cursor:pointer;min-height:2.4em}
+.bgxr button:disabled{opacity:.45}
+.bgxx{display:block;margin:.6em auto 0;background:#1c2f6b;color:#fff}
+.bgxn{text-align:center;padding:.6em 0;opacity:.8}
+.bgxh{font-weight:700;text-align:center;color:#9a5a00;padding:.5em 0 .15em;border-top:1px solid #e4d6a8}
+.bgxs{background:#fff;border-radius:.6em;margin-top:.5em;opacity:1;padding:.5em .6em}
+.bgxp2{position:fixed;left:50%;top:34%;z-index:17;font-size:4.2em;line-height:1;pointer-events:none;transform:translate(-50%,0);animation:bgxb .5s ease-in-out 4 alternate}
+@keyframes bgxb{from{transform:translate(-50%,0) scale(1)}to{transform:translate(-50%,-.35em) scale(1.25)}}
+.bgxx{position:sticky;bottom:0}
+@media (max-height:480px){.bgxc{padding:.5em .8em;max-height:94vh}.bgxc h3{font-size:1.05em;margin:0 0 .15em}.bgxm{margin-bottom:.15em}.bgxr{padding:.2em 0;gap:.4em}.bgxi{font-size:1.35em}.bgxt small{font-size:.72em;line-height:1.1}.bgxr button,.bgxx{min-height:2em;padding:.3em .8em}.bgxx{margin-top:.35em}.bgxs{margin-top:.3em;padding:.3em .5em}}

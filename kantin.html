@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SCHOOL RUSH · Kantin</title>
+<meta name="theme-color" content="#16204a">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="SCHOOL RUSH">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"></head><body>
+<canvas id="cv"></canvas>
+<div id="hud"><b class="hp" id="mdl">Kantin</b><button id="ex" class="hp" aria-label="Jeda"><svg viewBox="0 0 24 24" width="18" height="18"><rect x="5" y="4" width="5" height="16" rx="1.5" fill="currentColor"/><rect x="14" y="4" width="5" height="16" rx="1.5" fill="currentColor"/></svg></button><span id="scr" class="hp">Gerai 0/5</span></div>
+<canvas id="mm" width="320" height="320"></canvas>
+<div id="msg" class="p"></div><div id="hint" class="p"></div><div id="bub" class="p"></div>
+<div id="help" class="p">WASD / anak panah · Space lompat · E tindakan · seret tetikus untuk pusing kamera</div>
+<div id="jz"><div id="jb"><div id="jk"></div></div></div>
+<div id="tb"><button id="be">E</button><button id="bj" aria-label="Lompat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V6M6 11l6-6 6 6"/></svg></button></div>
+<div id="menu"><button id="fs" title="Skrin penuh"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 9V3h6M15 3h6v6M21 15v6h-6M9 21H3v-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+<div id="vp" class="v" hidden><h2 style="margin:0">Jeda</h2><div class="r2" style="flex-direction:column;width:min(80vw,18em)"><button id="pS" class="big">Sambung</button><button id="pH">Cara Main</button><button id="pT">Tetapan</button><button id="pQ">Halaman Utama</button></div></div></div>
+<div id="ld" style="display:flex"><div class="sp"></div><div id="tip"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){const L=["js/core.js", "js/chars.js", "js/ui.js", "js/audio.js", "js/hud.js", "js/wallet.js", "js/spot.js", "js/cam-clamp.js", "js/bag.js", "js/kantin-data.js", "js/kantin-games.js", "js/kantin.js"];function go(){if(typeof THREE==='undefined'){var d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#16204a;color:#fff;font:600 18px sans-serif;text-align:center;padding:20px';d.innerHTML='<div>Tak dapat memuatkan game.<br>Semak internet, kemudian cuba lagi.</div><button style="font:inherit;padding:.6em 1.4em;border:0;border-radius:1em;background:#ffd23f;color:#1c2f6b;font-weight:700" onclick="location.reload()">Cuba lagi</button>';document.body.appendChild(d);return}let i=0;(function nx(){if(i>=L.length)return;const s=document.createElement('script');s.src=L[i++];s.onload=nx;document.head.appendChild(s)})()}
+document.fonts.load('700 32px Fredoka').catch(function(){}).then(go)})();
+</script></body></html>
