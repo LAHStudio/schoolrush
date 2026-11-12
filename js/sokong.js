@@ -1,0 +1,21 @@
+/* Round 21/21b: Sokong screen (js/sokong.js). Optional donation through the dev's TNG eWallet payment link (CFG.pay). Opened by the main start-screen button #mSok ("Belanja saya kopi!", in index.html) and by the thank-you card. Own overlay (id sokxv, css sokxcss); not part of ui.js. SOK.thanks() = one soft thank-you card per device (LS sk_sok), 5 s after the first Janitor chest; it never blocks the game. No libraries, no QR, no network calls of its own. */
+(function(){
+const CFG={title:'\u2615 Belanja saya kopi',line:'Game ni percuma dan dibuat seorang diri. Kalau suka, belanja saya kopi.',pay:'https://payment.tngdigital.com.my/sc/bDLozjC2PX',payLabel:'Bayar melalui TNG eWallet',thanks:'Terima kasih sebab main!',tBtn:'Belanja saya kopi! \u2615',tMs:5000,tShow:14000,key:'sk_sok'};
+let ov=null,tc=null,own=false,pushed=false;
+const G=id=>document.getElementById(id),hl=()=>typeof halt!=='undefined';
+const rd=()=>{try{return(typeof LS!=='undefined'?LS.get(CFG.key,{}):JSON.parse(localStorage.getItem(CFG.key))||{})||{}}catch(e){return{}}},wr=v=>{try{typeof LS!=='undefined'?LS.set(CFG.key,v):localStorage.setItem(CFG.key,JSON.stringify(v))}catch(e){}};
+function css(){if(G('sokxcss'))return;const s=document.createElement('style');s.id='sokxcss';s.textContent='#sokxv{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(10,16,40,.78);font-family:Fredoka,sans-serif;padding:3vmin}.sokc{display:flex;flex-direction:column;align-items:center;gap:.7em;background:#fff8e1;color:#1c2f6b;border-radius:1.2em;padding:1.2em 1.4em;max-width:min(92vw,26em);max-height:94vh;overflow:auto;text-align:center;box-shadow:0 .4em 1.6em rgba(0,0,0,.5)}.sokc h2{margin:0;font-size:1.35em}.sokc p{margin:0;font-size:.95em}.sokr{display:flex;flex-wrap:wrap;gap:.5em;justify-content:center}.sokc button,.sokc a{font:inherit;font-weight:600;border:0;border-radius:.9em;padding:.55em 1em;background:#ffd23f;color:#1c2f6b;text-decoration:none;cursor:pointer}.sokc .sokg{background:#dfe6ff}#sokxt{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 2vh);transform:translateX(-50%);z-index:55;display:flex;align-items:center;gap:.6em;flex-wrap:wrap;justify-content:center;background:#fff8e1;color:#1c2f6b;border-radius:1em;padding:.6em .9em;font:600 .95em Fredoka,sans-serif;box-shadow:0 .3em 1em rgba(0,0,0,.45);max-width:92vw}#sokxt button{font:inherit;border:0;border-radius:.8em;padding:.4em .8em;background:#ffd23f;color:#1c2f6b;cursor:pointer}#sokxt .sokg{background:#dfe6ff}';document.head.appendChild(s)}
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function open(){if(ov)return;css();rmT();if(hl()&&!halt){halt=true;own=true}
+ ov=el('div');ov.id='sokxv';ov.setAttribute('role','dialog');const c=el('div','sokc'),r=el('div','sokr');c.appendChild(el('h2','',CFG.title));c.appendChild(el('p','',CFG.line));
+ const a=el('a','',CFG.payLabel);a.href=CFG.pay;a.target='_blank';a.rel='noopener';r.appendChild(a);const k=el('button','sokg','Tutup');k.onclick=()=>close();r.appendChild(k);c.appendChild(r);ov.appendChild(c);ov.onclick=e=>{if(e.target===ov)close()};document.body.appendChild(ov);
+ if(!(typeof SR_TRAP!=='undefined'&&SR_TRAP)){try{history.pushState({sok:1},'');pushed=true}catch(e){}}}
+function close(fromBack){if(!ov)return;ov.remove();ov=null;if(own){own=false;if(hl())halt=false}if(pushed){pushed=false;if(!fromBack){try{history.back()}catch(e){}}}}
+function rmT(){if(tc){tc.remove();tc=null}}
+function show(n){if(ov||tc)return;if(hl()&&halt){if(n<4)setTimeout(show,3000,n+1);return}css();const s=rd();s.t=1;wr(s);
+ tc=el('div');tc.id='sokxt';tc.appendChild(el('span','',CFG.thanks));const a=el('button','',CFG.tBtn),b=el('button','sokg','Tutup');a.onclick=()=>open();b.onclick=rmT;tc.appendChild(a);tc.appendChild(b);document.body.appendChild(tc);setTimeout(rmT,CFG.tShow)}
+function thanks(){if(rd().t||ov||tc)return;setTimeout(show,CFG.tMs,0)}
+function mount(){const b=G('mSok');if(b)b.onclick=open}
+addEventListener('popstate',()=>{if(ov)close(true)});addEventListener('keydown',e=>{if(ov&&e.key==='Escape')close()});
+window.SOK={CFG,open,close,thanks,isOpen:()=>!!ov};window.sokOpen=open;window.sokThanks=thanks;mount();
+})();

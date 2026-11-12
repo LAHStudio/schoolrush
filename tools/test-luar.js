@@ -83,12 +83,12 @@ ok(mn.includes("SS.del('sk_in');inMenu=false"),'menu.js: a new start clears the 
 ok(st.includes('goHome()')&&st.includes("SS.set('sk_out','home')")&&st.includes('ret.home')&&st.includes('endDay()'),'story.js: the balik bell goes outside, the end card shows after the bus');
 ok(st.includes("else if(!arr)posRestore()"),'story.js: Mod Jalan-jalan starts at the school entrance after the outdoor map, saved position kept in the save');
 ok(/const L=\["js\/core.js", "js\/chars.js", "js\/ui.js", "js\/audio.js", "js\/hud.js", "js\/cam-clamp.js", "js\/wallet.js", "js\/bag.js", "js\/luar-logic.js", "js\/luar.js"\]/.test(lh),'luar.html: loads core, chars, ui, audio, hud, cam-clamp, wallet, bag, luar-logic, luar in order');
-ok(sw.includes("CACHE='sr-r20d'")&&sw.includes("'luar.html'")&&sw.includes("'js/luar.js'")&&sw.includes("'js/luar-logic.js'"),'sw.js: cache sr-r14 with the outdoor files');
+ok(sw.includes("CACHE='sr-r21b'")&&sw.includes("'luar.html'")&&sw.includes("'js/luar.js'")&&sw.includes("'js/luar-logic.js'"),'sw.js: cache sr-r14 with the outdoor files');
 ok(/Round 12\b/.test(rd)&&/Round 12b/.test(rd)&&/Round 12c/.test(rd)&&/Luar Sekolah/.test(rd),'README has Round 12, 12b and 12c entries');
 ok(/LUC\.LAY\.forEach/.test(lj)&&/W\*\.92/.test(lj)&&/LUC\.ICE\.z\+\.75/.test(lj)&&/walkTick/.test(lj)&&/DYNS\.some/.test(lj)&&/bold 22px/.test(lj)&&/fillText\('PERHENTIAN',96,62,150\)/.test(lj),'luar.js: layered ground, sign text fits (80%, squeeze guard), ice man in front of the cart, solid people, walker logic');
 ok(/PERHENTIAN/.test(lj)&&/LALUAN BAS/.test(lj)&&/KEDAI RUNCIT/.test(lj)&&/PAPAN KENYATAAN/.test(lj),'luar.js: pole sign, route map, kedai runcit and notice boards exist');
 ok(/sc\.remove\(m\);BG\.add\(m\)/.test(lj)&&!/setSig|sigOn/.test(lj),'luar.js: the bus board belongs to the bus (no floating sign); old signal code is gone');
 ok(!/localStorage|cur\.save=|cur\.pos=/.test(lj),'luar.js writes no save data (saves untouched)');
 const cu=R('js/core.js'),ui=R('js/ui.js'),bk=require('child_process').execSync('git --version 2>/dev/null || true').toString();
-ok(fs.readFileSync(path.join(__dirname,'..','_backup_round20a/js/world.js'),'utf8').length>0&&cu.length>0&&ui.length>0,'backup _backup_round20a exists (older folders are no longer kept)');
+ok(fs.readFileSync(path.join(__dirname,'..','_backup_round20d/js/world.js'),'utf8').length>0&&cu.length>0&&ui.length>0,'backup _backup_round20d exists (older folders are no longer kept)');
 console.log(f?f+' FAILED':'ALL PASSED');process.exit(f?1:0);

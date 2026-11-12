@@ -1,6 +1,6 @@
 const mat=c=>new T.MeshPhongMaterial({color:c,flatShading:true,shininess:0,specular:0});
 function bx(p,w,h,d,c,x,y,z){const m=new T.Mesh(new T.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=true;p.add(m);return m}
-const cosHas=(o,k)=>!!(o&&o.cos&&o.cos.indexOf(k)>=0); /* Round 17: worn cosmetics (cap, eye, beard, mos) come in o.cos */
+const cosHas=(o,k)=>!!(o&&o.cos&&o.cos.indexOf(k)>=0); /* Round 17: worn cosmetics (cap, eye, beard, mos; Round 20e: vest) come in o.cos */
 function faceMat(o){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');
 [40,88].forEach(x=>{g.fillStyle='#111';g.beginPath();g.ellipse(x,68,9*o.es,13*o.es,0,0,7);g.fill();g.fillStyle='#fff';g.beginPath();g.arc(x+3,62,3.2,0,7);g.fill()});
 g.strokeStyle='#1a1008';g.lineWidth=o.bw;g.lineCap='round';
@@ -35,6 +35,7 @@ if(ot.collar)bx(B,.22,.05,.285,ot.collar,0,.955,0);
 if(ot.tie)bx(B,.07,.3,.02,ot.tie,0,.8,.145);
 if(ot.badge)bx(B,.06,.06,.02,'#e8c53a',.12,.86,.145);
 if(ot.ap)bx(B,.4*W,.48,.03,ot.ap,0,.56,.15);
+if(cosHas(o,'vest')){bx(B,.5*W,.44,.34,'#f28c1c',0,.72,0);bx(B,.51*W,.045,.345,'#f1f3c4',0,.62,0);bx(B,.51*W,.045,.345,'#f1f3c4',0,.8,0);bx(B,.02,.42,.345,'#b86412',0,.72,0);bx(B,.2,.12,.02,'#d9dcc0',0,.74,-.18)} /* Round 20e: Rompi Tukang Cuci: orange vest with 2 reflective stripes, a zip line and a back panel, a little proud of the torso so it covers the tie, badge and apron */
 [-1,1].forEach(i=>{const a=new T.Group();a.position.set(i*.3*W,.93,0);const L=ot.ls?.36:.2;
 bx(a,.13,L,.13,ot.sl||ot.top,0,-L/2,0);bx(a,.1,.44-L,.1,o.skin,0,-L-(.44-L)/2,0);
 if(ot.cuff)bx(a,.135,.04,.135,ot.cuff,0,-L+.02,0);B.add(a);arms.push(a)});
@@ -53,7 +54,7 @@ pre:{m:{top:'#4f8ad0',bot:'#1c2650',shoe:'#15151a',tie:'#243b8a',badge:1,ls:1},f
 function player(g,out,L){L=L||{};return build({o:OUT[out][g],skin:L.sk||'#b87a50',hc:L.hc||'#14161d',hs:L.hs||(g=='f'?'bob':'fringe'),tud:L.tud,noTud:L.nt,rib:L.rib,es:L.es||1,bw:4,mouth:L.mo||0,mask:L.mask,cos:typeof BAG!=='undefined'&&BAG.worn?BAG.worn():null})} /* Round 17: the menu page has no BAG, so the setup preview never shows cosmetics */
 function npc(role,g){g=g||R(['m','f']);const f=g=='f',o={skin:R(SK),hc:R(HC),h:rnd(.9,1.1),w:rnd(.92,1.15),mouth:R([0,0,1,2]),es:rnd(.8,1.2),bw:rnd(3,6)};
 if(role=='murid'||role=='pengawas'){o.o=Object.assign({},OUT[role=='murid'?(Math.random()<.2?'pe':'uni'):'pre'][g]);o.hs=f?null:R(['short','fringe','spiky','side','crew','short']);if(f&&Math.random()<.4){o.noTud=true;o.hs=R(['bob','pony','bun','pigtails','braid']);o.rib=Math.random()<.4?R(CL):null}if(role=='murid')o.mask=Math.random()<.2}
-else if(role=='cuci'){o.h=rnd(1.2,1.26);o.o={top:'#6b8f71',bot:'#3a4a40',shoe:'#1a1a1e',ls:1};o.hs='short';o.glasses=true;o.stache=true} /* Round 20b: the janitor (js/jkey.js) */
+else if(role=='cuci'){o.h=rnd(1.2,1.26);o.o={top:'#6b8f71',bot:'#3a4a40',shoe:'#1a1a1e',ls:1};o.hs='short';o.glasses=true;o.stache=true;o.cos=['vest']} /* Round 20b: the janitor (js/jkey.js); Round 20e: he wears the same vest */
 else{o.h=rnd(1.2,1.32);const c=R(CL);
 if(f){o.o={top:c,bot:c,long:1,shoe:'#2a2a30',ls:1};if(Math.random()<.7)o.tud=R(['#f6f7fb','#2a2a46',c,'#e8d6c0','#7a4a8a']);else o.hs=R(['bun','bob','pony']);o.glasses=Math.random()<.4}
 else{o.o={top:R(['#f4f6fa','#8ab6e8','#e8dcc0','#9ad0b0']),bot:R(['#222633','#3a3a40']),shoe:'#1a1a1e',tie:Math.random()<.7?R(CL):null,ls:1};o.hs=R(['short','fringe','bald']);o.stache=Math.random()<.3;o.glasses=Math.random()<.4}}

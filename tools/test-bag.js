@@ -164,7 +164,7 @@ ok(/BAG\.onEat=/.test(L)&&/eatT/.test(L)&&/arms\[1\]\.rotation\.x=-2\.4/.test(L)
 ok(/typeof BAG!=='undefined'&&BAG\.open/.test(H),'hud.js: the bag button opens the bag');
 for(const f of ['world','kantin','luar','padang','kelas'])ok(/"js\/bag\.js"/.test(rd(f+'.html')),f+'.html loads js/bag.js');
 ok(rd('luar.html').indexOf('js/wallet.js')<rd('luar.html').indexOf('js/bag.js')&&rd('luar.html').indexOf('js/bag.js')<rd('luar.html').indexOf('js/luar.js'),'luar.html: wallet.js, then bag.js, before luar.js');
-ok(S.includes("'js/bag.js'")&&/CACHE='sr-r20d'/.test(S),'sw.js: cache sr-r20a and js/bag.js pre-cached');
+ok(S.includes("'js/bag.js'")&&/CACHE='sr-r21b'/.test(S),'sw.js: cache sr-r20a and js/bag.js pre-cached');
 ok(rd('js/core.js').indexOf('BAG')<0&&rd('js/ui.js').indexOf('BAG')<0,'core.js and ui.js are not changed (no bag code there)');
 /* ---- names and ids are free ---- */
 {const others=fs.readdirSync(path.join(__dirname,'..','js')).filter(f=>f!='bag.js').map(f=>[f,rd('js/'+f)]);

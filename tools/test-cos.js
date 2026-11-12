@@ -105,7 +105,28 @@ const find=(g,f)=>{let n=0;g.traverse(o=>{if(o.isMesh&&f(o))n++});return n};
  ok(!rd('index.html').includes('js/bag.js'),'index.html does not load bag.js, so the setup preview is plain');
  ok(['world.html','kantin.html','luar.html','padang.html','kelas.html'].every(f=>rd(f).includes('js/bag.js')),'all five game pages load bag.js');
  ok(/pm!==ghP/.test(rd('js/world.js'))&&/pm!==ghP/.test(rd('js/luar.js')),'world and luar re-ghost a rebuilt player');
- const sw=rd('sw.js');ok(/CACHE='sr-r20d'/.test(sw)&&sw.includes("'js/chars.js'")&&sw.includes("'js/bag.js'"),'sw.js: cache sr-r20d');
+ const sw=rd('sw.js');ok(/CACHE='sr-r21b'/.test(sw)&&sw.includes("'js/chars.js'")&&sw.includes("'js/bag.js'"),'sw.js: cache sr-r21b');
  ok(rd('css/style.css').includes('.bgxh{'),'css has the header row rule');
  ok(/## Pusingan 17/.test(rd('README.md')),'README has a Round 17 entry');}
+/* ---------- 9. Round 20e: Rompi Tukang Cuci (the vest): a reward, never sold ---------- */
+{const base=cntMesh(load().p.player('m','uni',{}));
+ const v=load(['vest']).p.player('m','uni',{});
+ ok(cntMesh(v)==base+5&&find(v,o=>o.material.color=='#f28c1c'&&o.geometry.w==.5&&o.geometry.d==.34)==1&&find(v,o=>o.material.color=='#f1f3c4')==2&&find(v,o=>o.material.color=='#b86412')==1&&find(v,o=>o.material.color=='#d9dcc0')==1,'vest: 5 boxes (an orange body, 2 reflective stripes, a zip line, a back panel)');
+ const bf=cntMesh(load().p.player('f','uni',{}));ok(cntMesh(load(['vest']).p.player('f','uni',{}))==bf+5,'the vest is drawn on the girl too');
+ ok(cntMesh(load(['cap','eye','beard','mos','vest']).p.player('m','uni',{hc:'#aa5500'}))==base+3+5+5,'all five cosmetics together');
+ ok(.34/2>.145+.01&&.34/2>.15+.015&&.34/2>.27/2+.02,'the vest front (z .17) is in front of the tie, badge and apron faces, so none of them shows through it, and it is a little proud of the torso (.135)');
+ const jn=load().p.npc('cuci','m');ok(find(jn,o=>o.material.color=='#f28c1c'&&o.geometry.d==.34)==1,'the janitor NPC wears the vest');
+ ok(find(load().p.npc('murid','m'),o=>o.material.color=='#f28c1c'&&o.geometry.d==.34)==0&&find(load().p.npc('pengawas','m'),o=>o.material.color=='#f28c1c'&&o.geometry.d==.34)==0,'no murid or pengawas wears it (the guru look needs the class list, it is covered by chars.js itself)');
+}
+{const c={name:'A',w:{c:1000}};const{BAG:B,WALLET:W}=env(c);
+ ok(B.COSALL.join()=='cap,eye,beard,mos,vest'&&B.COSORD.join()=='cap,eye,beard,mos'&&B.COS.vest&&B.COS.vest.n=='Rompi Tukang Cuci'&&B.IT.vest===undefined,'COSALL has the vest, the shop list (COSORD) does not');
+ ok(!B.price('vest')&&B.buyCos('vest')=='bad'&&!B.owns('vest')&&W.get()==1000&&c.cos===undefined,'the vest cannot be bought: no price, no money taken, nothing created');
+ ok(B.wear('vest').ok===false,'cannot wear what is not owned');
+ ok(B.grantCos('vest')===true&&B.owns('vest')&&c.cos.own.vest==1&&B.grantCos('vest')===false&&W.get()==1000,'a reward: granted once, no money involved');
+ ok(B.grantCos('nope')===false&&B.grantCos('')===false,'only known cosmetics can be granted');
+ B.wear('vest');ok(B.isOn('vest')&&B.worn().join()=='vest'&&c.cos.on.vest==1,'wear: it is worn and saved in cur.cos.on');B.doff('vest');ok(!B.isOn('vest')&&B.worn().length==0&&B.owns('vest'),'take off: still owned');
+ const cap=env({name:'B',w:{c:5000}}).BAG;cap.buyCos('cap');cap.grantCos('vest');cap.wear('cap');cap.wear('vest');ok(cap.worn().join()=='cap,vest','cap and vest together, in the same order as COSALL')}
+{const c={name:'A',w:{c:5000}};const e=env(c,1),B=e.BAG,d=e.doc;B.grantCos('vest');B.open();const t=d.body.textContent;ok(/Barang Gaya/.test(t)&&/Rompi Tukang Cuci/.test(t)&&/Belum dipakai/.test(t),'the bag shows the vest under Barang Gaya');
+ const b=btns(d).filter(x=>x.textContent=='Pakai');ok(b.length==1,'with a Pakai button');b[0].onclick();ok(B.isOn('vest')&&B.worn().includes('vest'),'the button wears it');B.close();
+ B.openRuncit();const t2=d.body.textContent;ok(!/Rompi/.test(t2)&&/Topi/.test(t2),'the Kedai Runcit never lists the vest');B.close()}
 console.log(fail?fail+' FAILED, '+pass+' passed':'OK '+pass+' checks');process.exit(fail?1:0);

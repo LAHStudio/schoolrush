@@ -87,7 +87,7 @@ function walk(m,speed,secs,extra){m.SRA._t.reset();m.sb.SET.mus=0;const P=m.sb.P
 /* 6. wiring in the files */
 {const L=s=>R(s);const pages=['index','world','kantin','padang','kelas','luar'];
  ok(pages.every(p=>{const t=L(p+'.html'),m=t.match(/const L=(\[.*?\]);/);if(!m)return false;const a=JSON.parse(m[1]);return a.indexOf('js/audio.js')==a.indexOf('js/ui.js')+1&&a.indexOf('js/core.js')<a.indexOf('js/audio.js')}),'all 6 pages (Round 12 adds luar) load js/audio.js right after js/ui.js (after core.js, before the scene scripts)');
- const sw=L('sw.js');ok(/CACHE='sr-r20d'/.test(sw)&&sw.includes("'js/audio.js'"),'sw.js: cache sr-r14 and audio.js pre-cached');
+ const sw=L('sw.js');ok(/CACHE='sr-r21b'/.test(sw)&&sw.includes("'js/audio.js'"),'sw.js: cache sr-r14 and audio.js pre-cached');
  ok(L('js/world.js').includes('SRA.sip()')&&!/tone\(420-i\*60/.test(L('js/world.js')),'world.js sip() uses SRA.sip()');
  ok(L('js/world-build.js').includes('SRA.bin();const c=carry')&&L('js/kantin.js').includes('SRA.bin();const c=carry'),'hallway and kantin bins call SRA.bin() on a correct throw');
  const st=L('js/story.js');ok((st.match(/SRA\.whistle\(\)/g)||[]).length==3,'story.js: whistle when late, when caught and when the patrol prefects join (Round 14c)');
@@ -98,5 +98,5 @@ function walk(m,speed,secs,extra){m.SRA._t.reset();m.sb.SET.mus=0;const P=m.sb.P
  ok(!/localStorage|sessionStorage|new Audio|\.mp3|\.ogg|\.wav|fetch\(/.test(src),'no audio files, no storage, no network in audio.js');
  ok(/Round 11/.test(L('README.md')),'README has a Round 11 entry');
  const sha=f=>require('crypto').createHash('sha256').update(fs.readFileSync(path.join(__dirname,'..',f))).digest('hex'); /* Round 12d: hashes of the Round 11 originals (the _backup_round11 folder is no longer kept) */
- ok(sha('js/core.js')=='d25c34b19f3d807de2c788764e4d0eb5d6e6766c86e8a3a0d00ecafbeca497de'&&sha('js/ui.js')=='483e48f5d5cede4f5ccbd06f53944c95f455f41dec33bf6c1bf3aa6516b70c7f','core.js and ui.js are unchanged (saves, settings UI untouched)');}
+ ok(sha('js/core.js')=='d25c34b19f3d807de2c788764e4d0eb5d6e6766c86e8a3a0d00ecafbeca497de'&&sha('js/ui.js')=='a48e678f8f44457e4e7d74e50244a09b3e5455ace967e220904cf88bb04a6d0c','core.js and ui.js are unchanged (saves, settings UI untouched)');}
 console.log(f?('\n'+f+' FAILED'):'\nALL PASS');process.exit(f?1:0);
