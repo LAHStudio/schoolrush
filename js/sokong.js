@@ -1,6 +1,6 @@
 /* Round 21/21b: Sokong screen (js/sokong.js). Optional donation through the dev's TNG eWallet payment link (CFG.pay). Opened by the main start-screen button #mSok ("Belanja saya kopi!", in index.html) and by the thank-you card. Own overlay (id sokxv, css sokxcss); not part of ui.js. SOK.thanks() = one soft thank-you card per device (LS sk_sok), 5 s after the first Janitor chest; it never blocks the game. No libraries, no QR, no network calls of its own. */
 (function(){
-const CFG={title:'\u2615 Belanja saya kopi',line:'Game ni percuma dan dibuat seorang diri. Kalau suka, belanja saya kopi.',pay:'https://payment.tngdigital.com.my/sc/bDLozjC2PX',payLabel:'Bayar melalui TNG eWallet',thanks:'Terima kasih sebab main!',tBtn:'Belanja saya kopi! \u2615',tMs:5000,tShow:14000,key:'sk_sok'};
+const CFG={title:'\u2615 Belanja saya kopi',line:'Game ini 100% percuma dan dibangunkan seorang diri. Kalau suka dan nak lihat lebih banyak content, boleh belanja saya kopi \uD83D\uDE0A Terima kasih \u2728',pay:'https://payment.tngdigital.com.my/sc/bDLozjC2PX',payLabel:'Bayar melalui TNG eWallet',thanks:'Terima kasih sebab main!',tBtn:'Belanja saya kopi! \u2615',tMs:5000,tShow:14000,key:'sk_sok'};
 let ov=null,tc=null,own=false,pushed=false;
 const G=id=>document.getElementById(id),hl=()=>typeof halt!=='undefined';
 const rd=()=>{try{return(typeof LS!=='undefined'?LS.get(CFG.key,{}):JSON.parse(localStorage.getItem(CFG.key))||{})||{}}catch(e){return{}}},wr=v=>{try{typeof LS!=='undefined'?LS.set(CFG.key,v):localStorage.setItem(CFG.key,JSON.stringify(v))}catch(e){}};

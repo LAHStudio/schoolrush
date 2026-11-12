@@ -105,7 +105,7 @@ const find=(g,f)=>{let n=0;g.traverse(o=>{if(o.isMesh&&f(o))n++});return n};
  ok(!rd('index.html').includes('js/bag.js'),'index.html does not load bag.js, so the setup preview is plain');
  ok(['world.html','kantin.html','luar.html','padang.html','kelas.html'].every(f=>rd(f).includes('js/bag.js')),'all five game pages load bag.js');
  ok(/pm!==ghP/.test(rd('js/world.js'))&&/pm!==ghP/.test(rd('js/luar.js')),'world and luar re-ghost a rebuilt player');
- const sw=rd('sw.js');ok(/CACHE='sr-r21b'/.test(sw)&&sw.includes("'js/chars.js'")&&sw.includes("'js/bag.js'"),'sw.js: cache sr-r21b');
+ const sw=rd('sw.js');ok(/CACHE='sr-r21c'/.test(sw)&&sw.includes("'js/chars.js'")&&sw.includes("'js/bag.js'"),'sw.js: cache sr-r21c');
  ok(rd('css/style.css').includes('.bgxh{'),'css has the header row rule');
  ok(/## Pusingan 17/.test(rd('README.md')),'README has a Round 17 entry');}
 /* ---------- 9. Round 20e: Rompi Tukang Cuci (the vest): a reward, never sold ---------- */

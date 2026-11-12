@@ -186,7 +186,7 @@ ok(WORLD.includes('const CANE_SLOW=[8,12,16];')&&WORLD.includes('lockDetain(CANE
 ok(/const CANE_TEST=false;/.test(WB)&&/LKM=\[\]/.test(WB)&&/LKM\.push\(\{m,x:/.test(WB),'world-build.js: CANE_TEST off, lockers collected in LKM');
 ok(/lk=window\.lockPf\?window\.lockPf\(\):null;if\(lk\)a\.push\(lk\)/.test(ST)&&/window\.pfGo=/.test(ST)&&/window\.pfMark=pfOn/.test(ST)&&/window\.pfUnmark=/.test(ST)&&/window\.storyPen=function\(n\)/.test(ST)&&ST.includes('function joinEx()'),'story.js: minimap triangle also for lockPf, pfGo, pfMark, pfUnmark, storyPen, old chase code intact');
 ok(/"js\/story\.js", "js\/lockers\.js", (?:"js\/toilet\.js", )?(?:"js\/npc-nav\.js", )?"js\/world\.js"/.test(HTML),'world.html loads lockers.js after story.js, before world.js (Round 19: toilet.js may sit between)');
-ok(/CACHE='sr-r21b'/.test(SW)&&SW.includes("'js/lockers.js'"),'sw.js: cache sr-r20a and js/lockers.js pre-cached');
+ok(/CACHE='sr-r21c'/.test(SW)&&SW.includes("'js/lockers.js'"),'sw.js: cache sr-r20a and js/lockers.js pre-cached');
 const others=['core','chars','ui','audio','hud','wallet','spot','cam-clamp','bag','luar','kantin','padang','kelas'].map(n=>[n,rd('js/'+n+'.js')]);
 for(const n of['LOCK','lockGo','lockHint','lockTick','lockDetain','lockPf','LKM','lkxp','lkxc','lkxh','lkxs','lkxn','lkxbar','lkxo','lkxcss','lkxd','lkxdt','lkxw','lkxk','lkxf','CANE_SLOW'])ok(!others.some(([f,s])=>new RegExp('\\b'+n+'\\b').test(s)),'name '+n+' not used by other scripts');
 ok(!/lkx/.test(rd('css/style.css')),'css has no lkx names');

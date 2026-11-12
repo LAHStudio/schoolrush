@@ -62,7 +62,7 @@ const st=rd('js/story.js');
 ok(!st.includes("Skor '+score;")&&st.includes("b.textContent=st=='free'?'Jalan-jalan':hm(clk);"),'story.js: Skor removed from the clock pill');
 ok(st.includes("HUD.set({pts:score,note:st=='class'||st=='late'||st=='rehat'?LAB[cls]:null})"),'story.js: pills() feeds the HUD');
 ok(!/\$\('mdl'\)\.textContent/.test(st+rd('js/kantin.js')+rd('js/luar.js')+rd('js/padang.js')+rd('js/kelas.js')),'old #mdl writers removed (hud.js owns the MOD line)');
-ok(rd('sw.js').includes("'js/hud.js'")&&rd('sw.js').includes("CACHE='sr-r21b'"),'sw.js: cache sr-r15 and js/hud.js pre-cached');
+ok(rd('sw.js').includes("'js/hud.js'")&&rd('sw.js').includes("CACHE='sr-r21c'"),'sw.js: cache sr-r15 and js/hud.js pre-cached');
 ok(rd('css/style.css').includes('#hdn{')&&rd('css/style.css').includes('#hdav{'),'css has the HUD rules');
 /* ---- other scripts must not use the new names ---- */
 const others=fs.readdirSync(path.join(__dirname,'..','js')).filter(f=>f!='hud.js'&&f!='wallet.js').map(f=>rd('js/'+f)).join('\n');

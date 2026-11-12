@@ -8,7 +8,7 @@ const lcg=s=>()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296};
 /* ---- 1. files and hooks ---- */
 ok(/function act\(\)\{if\(halt\)return;if\(window\.mopAct\)mopAct\(\);if\(window\.exitGo&&exitGo\(\)\)return;/.test(WJ),'world.js: act() calls mopAct first (after the halt check), before the door, locker and toilet actions');
 ok(/if\(window\.toiTick\)toiTick\(dt,t\);if\(window\.jkTick\)jkTick\(dt\);if\(window\.mopTick\)mopTick\(dt,t\);drawMM\(\);/.test(WJ),'world.js: mopTick runs every frame after the player mesh is placed and animated');
-ok(/"js\/jkey\.js", "js\/mop\.js", "js\/world-build\.js"/.test(HTML)&&/'js\/jkey\.js','js\/mop\.js'/.test(SW)&&/CACHE='sr-r21b'/.test(SW),'world.html loads js/mop.js, sw.js caches it (cache sr-r21b)');
+ok(/"js\/jkey\.js", "js\/mop\.js", "js\/world-build\.js"/.test(HTML)&&/'js\/jkey\.js','js\/mop\.js'/.test(SW)&&/CACHE='sr-r21c'/.test(SW),'world.html loads js/mop.js, sw.js caches it (cache sr-r21c)');
 ok(ex('_backup_round20d/js/world.js')&&ex('_backup_round20d/js/jkey.js')&&!ex('_backup_round20d/js/mop.js')&&ex('_backup_round20d2/js/mop.js')&&ex('_backup_round20d2/sw.js')&&ex('_backup_round20d2/README.md')&&ex('_backup_round20d2/tools/test-mop.js')&&!ex('_backup_round20d2/js/world.js')&&ex('_backup_round20d3/js/mop.js'),'20d backup holds the files changed in 20d (mop.js is new); 20d2 and 20d3 hold mop.js, sw, README and tools');
 /* a look only: the file never writes the walking state (position, velocity, slow, boost, speed) */
 ok(!/\bP\.(x|z|sx|sz|slow|boost|stun|f)\s*([+\-*\/]?=)(?!=)/.test(SRC),'mop.js never writes P.x, P.z, P.sx, P.sz, P.slow, P.boost, P.stun or P.f (speed and collisions stay exactly the walking ones)');

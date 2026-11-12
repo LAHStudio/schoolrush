@@ -235,7 +235,7 @@ function CFG_S(m){return m.o.TOI.CFG.shock}
 ok(/lockGo\(\)\)return;if\(window\.toiGo&&toiGo\(\)\)return;/.test(WJ)&&/\(window\.lockHint\?lockHint\(\):''\)\|\|\(window\.toiHint\?toiHint\(\):''\)/.test(WJ)&&/lockTick\(dt,t\);if\(window\.toiTick\)toiTick\(dt,t\);/.test(WJ),'world.js: E, hint and tick call the toilet hooks right after the locker hooks');
 ok(/s=k\[2\]\+': masuk ke dalam\.'/.test(WJ)&&/Tak boleh masuk sini!/.test(WJ),'world.js: entrance message, the wrong-gender warning at the entrance stays');
 ok(/"js\/lockers\.js", "js\/toilet\.js", "js\/npc-nav\.js", "js\/world\.js", "js\/cheat\.js"/.test(HTML),'world.html loads toilet.js after lockers.js, npc-nav.js before world.js, cheat.js last');
-ok(/'js\/lockers\.js','js\/toilet\.js'/.test(rd('sw.js'))&&/CACHE='sr-r21b'/.test(rd('sw.js')),'sw.js: cache sr-r20a and toilet.js pre-cached');
+ok(/'js\/lockers\.js','js\/toilet\.js'/.test(rd('sw.js'))&&/CACHE='sr-r21c'/.test(rd('sw.js')),'sw.js: cache sr-r20a and toilet.js pre-cached');
 ok(!/toilet\.js/.test(rd('kantin.html')+rd('padang.html')+rd('kelas.html')+rd('luar.html')),'other pages do not load toilet.js');
 ok(/window\.lockWC=wc/.test(LK)&&/function wc\(\)\{if\(pf\|\|kn\|\|puz\|\|dtn>0\|\|sw>0\)return false;sw=CFG\.delay;sp=CFG\.spdBad;return true\}/.test(LK),'lockers.js: lockWC reuses the prefect timer and the fast speed');
 const others=['js/core.js','js/chars.js','js/ui.js','js/audio.js','js/hud.js','js/wallet.js','js/spot.js','js/cam-clamp.js','js/bag.js','js/story.js','js/lockers.js','js/kantin.js','js/padang.js','js/luar.js','js/luar-logic.js','js/kelas.js','js/menu.js'].map(f=>[f,rd(f)]);

@@ -553,3 +553,8 @@ Hadiah peti tandas lelaki (`cur.jk.lt[0]`, Round 20c) kini menjadi barang gaya y
 - **Fail diubah:** `js/sokong.js`, `js/ui.js`, `index.html`, `sw.js` (cache `sr-r21b`, tiada fail QR), `README.md`, ujian (`test-audio` cap ui.js, `test-sokong` ditulis semula, nama cache `sr-r21b` dalam ujian lama, `test-jkey` token sw.js). Tidak diubah: `core.js`, `world.js`, `story.js`, `menu.js`, `css/style.css`.
 - **Sandaran:** `_backup_round21b` ditambah. Kekal 21b, 21, 20e, 20d3, 20d2, 20d (`_backup_round20d` dikekalkan kerana empat ujian membandingkan dengannya). Semua 29 ujian lulus (semak melalui kod keluar).
 - **Belum diuji pada peranti:** butang kelima dalam landskap telefon (Xiaomi 14, Xperia 1 II), pautan TNG dibuka dalam aplikasi TNG, butang Kembali Android semasa skrin dibuka, dan rupa skrin pada PC selepas pembetulan sudut. Halaman pautan TNG tidak dapat dilihat daripada sini (ia dimuat dalam pelayar): semak nama penerima dan jumlah yang dipaparkan.
+
+## Pusingan 21c: teks skrin Sokong (cache `sr-r21c`)
+- Teks skrin Sokong ditukar kepada: "Game ini 100% percuma dan dibangunkan seorang diri. Kalau suka dan nak lihat lebih banyak content, boleh belanja saya kopi 😊 Terima kasih ✨" (`SOK.CFG.line` dalam `js/sokong.js`, emoji ditulis sebagai `\u` supaya selamat pada semua fail).
+- **Fail diubah:** `js/sokong.js` (satu baris teks), `sw.js` (cache `sr-r21c`), `README.md`, ujian (nama cache `sr-r21c`, `test-sokong` menyemak teks baharu dan sandaran 21c). Tiada perubahan lain. `_backup_round21c` ditambah; sandaran lain dikekalkan.
+- **Diuji:** semua 29 ujian lulus (semak melalui kod keluar). **Belum diuji:** teks yang lebih panjang pada skrin telefon landskap (kad boleh tatal jika perlu), dan pautan TNG dibuka dalam aplikasi.
