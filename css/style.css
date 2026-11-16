@@ -258,3 +258,4 @@ body.sg #msg{top:3.4em}
 @keyframes bgxb{from{transform:translate(-50%,0) scale(1)}to{transform:translate(-50%,-.35em) scale(1.25)}}
 .bgxx{position:sticky;bottom:0}
 @media (max-height:480px){.bgxc{padding:.5em .8em;max-height:94vh}.bgxc h3{font-size:1.05em;margin:0 0 .15em}.bgxm{margin-bottom:.15em}.bgxr{padding:.2em 0;gap:.4em}.bgxi{font-size:1.35em}.bgxt small{font-size:.72em;line-height:1.1}.bgxr button,.bgxx{min-height:2em;padding:.3em .8em}.bgxx{margin-top:.35em}.bgxs{margin-top:.3em;padding:.3em .5em}}
+.slc.dim{opacity:.45}.slc.last{outline:3px solid #ffd23f;outline-offset:2px}.slm{font-weight:800}

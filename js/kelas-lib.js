@@ -51,7 +51,7 @@ function buildLib(c){const{sc,cols,FG,fset,sign,RX,RZ0,RZ1,DX,DW,WH}=c,BDX=LBW.B
   nb(sc,.4,.05,.3,'#4aa3ff',x-.9,.93,z+.15);nb(sc,.4,.05,.3,'#e24b4b',x+.8,.93,z-.15);
   [-.8,.8].forEach(o=>{chair(x+o,z+1,1);SEATS.push([x+o,z+1.05,Math.PI]);chair(x+o,z-1,-1);SEATS.push([x+o,z-1.05,0])});
   colBox(x-1.7,x+1.7,z-1.15,z+1.15)});
- SEATS.filter(s=>!(Math.abs(s[0]-QC[0])<.01&&Math.abs(s[1]-(QC[1]+.05))<.01)).sort(()=>Math.random()-.5).slice(0,6).forEach(s=>{const m=npc('murid');m.position.set(s[0],.04,s[1]);m.rotation.y=s[2];m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m)});
+ SEATS.filter(s=>!(Math.abs(s[0]-QC[0])<.01&&Math.abs(s[1]-(QC[1]+.05))<.01)).sort(()=>Math.random()-.5).slice(0,6).forEach(s=>{const m=npc('murid');m.position.set(s[0],seatY(m),s[1]);m.rotation.y=s[2];m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m)});
  /* ---- notice board and clock-side wall, globe by the window, rug with beanbags, plant ---- */
  const nx=LBW.NB[0];FG.back.push(bx(sc,3.4,1.5,.08,'#8a5a3a',nx,2,RZ0+.06),bx(sc,3.2,1.3,.08,'#c9955a',nx,2,RZ0+.1));
  [['#ffffff',-1,.3],['#ffd23f',-.35,.35],['#ff8fb1',.3,.25],['#9be0a8',.95,.3],['#8ec5ff',-.6,-.3],['#ffffff',.35,-.3]].forEach(a=>FG.back.push(bx(sc,.42,.5,.02,a[0],nx+a[1],2+a[2],RZ0+.15)));

@@ -6,7 +6,7 @@ ok(NP().level=='sederhana','NP default level is sederhana');
 ['mudah','sederhana','sukar'].forEach(l=>{const p=Object.assign(NP(),{name:'A',level:l});ok(fixP(p).level==l,'new slot keeps chosen level '+l)});
 const old={v:1,badges:{},rooms:{}};ok(fixP(old).level=='sederhana','old save with no level loads as sederhana');
 ok(fixP({level:'sukar'}).level=='sukar','existing level is not overwritten on load');
-const menu=R('js/menu.js');ok(/Object\.assign\(NP\(\),\{name:nm,level:selLv\}\)/.test(menu),'startGame saves selLv into the profile');
+const menu=R('js/menu.js');ok(/Object\.assign\(NP\(\),\{name:nm,level:selLv,mode:getMode\(\),cv:2\}\)/.test(menu),'startGame saves selLv into the profile');
 const lock=(STORY,cur)=>STORY?(cur.level||'sederhana'):null;
 ok(lock(true,{level:'mudah'})=='mudah'&&lock(true,{})=='sederhana'&&lock(false,{level:'sukar'})===null,'quiz lock: Mod Kelas = saved level (fallback sederhana), Mod Jalan-jalan = null');
 ok(R('js/kelas.js').includes("lock:STORY?(cur.level||'sederhana'):null"),'kelas.js still uses that exact lock');

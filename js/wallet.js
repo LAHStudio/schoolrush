@@ -11,5 +11,11 @@ const WALLET=(()=>{
  const topUp=lv=>{lv=fix(lv);const g=get();if(g>=lv)return 0;put(lv);return lv-g};
  const earn=t=>{const n=CFG.earn[t]||0;add(n);return n};
  const fmt=c=>'RM'+(fix(c)/100).toFixed(2);
- return{CFG,get,add,spend,topUp,earn,fmt}
+ /* Round 22: daily pocket money (Mod Kelas slots only). cur.w.p: missing or 1 = due, 0 = already given. due again when a school day is completed (story.js endDay). One grant per completed day, so restarting does not refill the wallet. */
+ const due=()=>{const c=C();return !(c&&c.w&&typeof c.w=='object'&&c.w.p===0)};
+ const mark=v=>{const c=C();if(!c)return;if(!c.w||typeof c.w!='object')c.w={};c.w.p=v;if(typeof save=='function')save()};
+ const pocket=()=>{if(!C()||!due())return 0;const a=topUp(CFG.pocket);mark(0);return a};
+ const setDue=()=>{if(C())mark(1)};
+ const msg=a=>{a=fix(a);return !a?'':'Duit saku ibu beri '+fmt(CFG.pocket)+' hari ini.'+(a<CFG.pocket?' (+'+fmt(a)+')':'')};
+ return{CFG,get,add,spend,topUp,earn,fmt,due,pocket,setDue,msg}
 })();

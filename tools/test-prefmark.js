@@ -12,7 +12,7 @@ const T={Mesh,RingGeometry:function(){},MeshBasicMaterial:function(){},DoubleSid
 const added=[];const sc={add(m){added.push(m)}},cam={},cv={clientWidth:400,clientHeight:800};
 const win={};
 const code=st.slice(i,jend)+';return{pfOn,pfOff,set(s,p,e){st=s;ph=p;ex=e||[]},vec(){return pfV}}';
-const mod=new Function('T','sc','cam','cv','document','MODE','window','let st="late",ph={x:3,z:4,m:{visible:true}},ex=[];'+code)(T,sc,cam,cv,doc,'story',win);
+const mod=new Function('T','sc','cam','cv','document','MODE','window','headY','let st="late",ph={x:3,z:4,m:{visible:true}},ex=[];'+code)(T,sc,cam,cv,doc,'story',win,()=>1.6);
 const c0={x:3,z:4};mod.pfOn(1,c0,0);const ring=meshes[0],bub=els[0];
 ok(meshes.length===1&&added.length===1&&ring.visible&&ring.position.x===3&&ring.position.z===4&&ring.position.y===.06,'ring created once, under the prefect feet');
 ok(bub.id==='pfb'&&bub.textContent==='!','first bubble has id pfb and shows "!"');

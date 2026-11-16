@@ -63,10 +63,10 @@ goal(-1);goal(1);
 /* ---- benches, cheering squad, cones ---- */
 const CHEER=[];
 function bench(x,z,ry,sit){bx(sc,2.2,.08,.5,'#a9744a',x,.46,z);bx(sc,2.2,.5,.07,'#a9744a',x,.8,z-Math.cos(ry)*.27);[-1,1].forEach(a=>bx(sc,.1,.42,.1,'#5a5f69',x+a*.95,.21,z));colBox(x,z,1.15,.4);
- (sit||[]).forEach(a=>{const m=npc('murid');m.position.set(x+a,.04,z);m.rotation.y=ry;m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m);LOWH.push(m)})}
+ (sit||[]).forEach(a=>{const m=npc('murid',undefined,{out:'pe'});m.position.set(x+a,seatY(m),z);m.rotation.y=ry;m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m);LOWH.push(m)})}
 [[-15,[-.5]],[-7,[.4]],[1,[-.4,.5]]].forEach(a=>bench(a[0],-16.4,0,a[1]));
 const PV={x:3.1,z:-16.4};mkVase(sc,PV.x,PV.z);colBox(PV.x,PV.z,.4,.4); /* Round 10b3: easter egg vase beside the bench nearest the Lari Berpagar station, silent (vaseHit in core.js) */[[8,[0]],[18,[0]]].forEach(a=>bench(a[0],16.6,Math.PI,a[1]));
-[[-18,-17.9],[-10,-18],[-2,-17.9],[5,-18],[24,16.9]].forEach((a,i)=>{const m=npc('murid');m.position.set(a[0],0,a[1]);m.rotation.y=a[1]<0?0:Math.PI;sc.add(m);CHEER.push({m,ph:i*1.3});if(i%2)LOWH.push(m)});
+[[-18,-17.9],[-10,-18],[-2,-17.9],[5,-18],[24,16.9]].forEach((a,i)=>{const m=npc('murid',undefined,{out:'pe'});m.position.set(a[0],0,a[1]);m.rotation.y=a[1]<0?0:Math.PI;sc.add(m);CHEER.push({m,ph:i*1.3});if(i%2)LOWH.push(m)});
 {const cg=new T.ConeGeometry(.22,.5,6),cm=mat('#ff7a1a'),cone=(x,z)=>{const m=new T.Mesh(cg,cm);m.position.set(x,.25,z);sc.add(m)};
  [-12,-6,0,6,12].forEach(x=>{cone(x,-(RI-.5));cone(x,RI-.5)});[-1,1].forEach(s=>{cone(VX+s*1.9,VZ0-.6);cone(VX+s*1.9,VZ0+1.6)})}
 /* ---- painted start boxes: thick start line at the back (stand here), START + event name painted ahead of it, thin closing line.
@@ -112,7 +112,7 @@ function wind(dt){const hx=Math.sin(P.f),hz=Math.cos(P.f),lim=SET.lo?5:WIND.leng
   w.life=w.max=rnd(.35,.55);w.m.position.set(P.x-hx*bk+hz*sd,rnd(.25,1.7),P.z-hz*bk-hx*sd);w.m.rotation.y=Math.atan2(-hz,hx);w.m.scale.x=.5+.9*boost;w.m.visible=true}}
  WIND.forEach(w=>{if(w.life<=0)return;w.life-=dt;if(w.life<=0){w.m.visible=false;return}w.m.material.opacity=.6*(w.life/w.max)})}
 /* ---- joggers: students running laps counter-clockwise (bottom straight to the right, up the right curve, top straight to the left, down the left curve). Not solid. ---- */
-const JOGR=JOG.v.map((v,i)=>{const r=RI+LW*JOG.lane[i],m=npc('murid'),Lp=4*SL+2*Math.PI*r;sc.add(m);if(i%2)LOWH.push(m);return{m,v,r,Lp,s:rnd(0,Lp),o:rnd(0,6)}});
+const JOGR=JOG.v.map((v,i)=>{const r=RI+LW*JOG.lane[i],m=npc('murid',undefined,{out:'pe'}),Lp=4*SL+2*Math.PI*r;sc.add(m);if(i%2)LOWH.push(m);return{m,v,r,Lp,s:rnd(0,Lp),o:rnd(0,6)}});
 function jogPos(j){const s=j.s,r=j.r,A=2*SL,C=Math.PI*r;let x,z,hx,hz,f;
  if(s<A){x=-SL+s;z=r;hx=1;hz=0}
  else if(s<A+C){f=(s-A)/r;x=SL+r*Math.sin(f);z=r*Math.cos(f);hx=Math.cos(f);hz=-Math.sin(f)}
@@ -158,7 +158,7 @@ function swapModel(){swapped=1;
  if(mode=='in'){pm.position.set(0,0,PG.z);pm.rotation.y=Math.PI/2;PG.snap=1}
  else{PG.end();pm.position.set(P.x,P.y,P.z);pm.rotation.y=P.f;pm.userData.B.rotation.x=0;anim(pm,0,false)}}
 function onRes(i,res){if(!res||res.exit){stageOut(shut);return}
- PG.snd.star(res.stars);lastRes=res;
+ PG.snd.star(res.stars);lastRes=res;window.lncEv&&lncEv('pj',i);
  card('<h2>'+'⭐'.repeat(res.stars)+'☆'.repeat(3-res.stars)+'</h2><p>'+res.txt+'</p><p class="kh">'+res.tip+'</p><div class="rw"><button onclick="PN.ok('+i+')">Teruskan ▶</button>'+(STORY?'':'<button class="kx" onclick="PN.again('+i+')">Main lagi</button>')+'</div>')}
 function done(i){RES[i]=lastRes;drawSign(i);MK[i].visible=false;const n=doneN();$('scr').textContent='Stesen '+n+'/3';closeCard();
  stageOut(()=>{if(n==3){em.visible=STORY;summary()}else{shut();toast('Stesen '+PD.g[i].sub+' siap! '+n+'/3',2400)}})}
@@ -227,7 +227,7 @@ function loop(ts){requestAnimationFrame(loop);const dt=Math.min((ts-last)/1000||
    if(gt>=1){if(mode=='in'){mode='stage';PG.begin(curI,r=>onRes(curI,r))}else{mode='walk';halt=false;document.body.classList.remove('mn');const f=afterOut;afterOut=null;if(f)f()}}}}
  /* HUD */
  MK.forEach((m,i)=>{m.visible=!RES[i]&&mode=='walk';if(m.visible)m.position.set(STN[i].x,3.9+Math.abs(Math.sin(t*3))*.3,STN[i].z)});if(em.visible)em.position.set(EX.x,4.2+Math.abs(Math.sin(t*3))*.3,EX.z);
- if(mode=='walk'){bt-=dt;const cw=cv.clientWidth,ch=cv.clientHeight,bb=$('bub');if(bb.style.display=='block'){bv.set(P.x,P.y+2.3,P.z).project(cam);bb.style.left=(bv.x*.5+.5)*cw+'px';bb.style.top=(-bv.y*.5+.5)*ch+'px'}
+ if(mode=='walk'){bt-=dt;const cw=cv.clientWidth,ch=cv.clientHeight,bb=$('bub');if(bb.style.display=='block'){bv.set(P.x,P.y+headY(pm)+.14,P.z).project(cam);bb.style.left=(bv.x*.5+.5)*cw+'px';bb.style.top=(-bv.y*.5+.5)*ch+'px'}
   const ns=nearSt(),h=$('hint'),pe=document.body.classList.contains('touch')?'Tekan E':'E';
   if(halt)h.style.display='none';else if(ns>=0){h.textContent=RES[ns]&&STORY?'Stesen '+(ns+1)+' sudah selesai ✔':pe+' · Main '+PD.g[ns].n;h.style.display='block'}else if(nearDoor()){h.textContent=pe+(!STORY||doneN()==3?' · Keluar padang':' · Pintu keluar ('+doneN()+'/3 stesen)');h.style.display='block'}else h.style.display='none';
   drawMM()}

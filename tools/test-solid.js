@@ -1,6 +1,7 @@
 /* Round 19h: people in the hallway are solid and steer around each other (js/npc-nav.js, wired in js/world.js). Node only.
    npc-nav.js runs for real; world.js is checked as source (three.js is not reachable here). Run: node tools/test-solid.js */
-const fs=require('fs'),path=require('path');let pass=0,fail=0;const ok=(c,m)=>{if(c)pass++;else{fail++;console.log('FAIL',m)}};
+const fs=require('fs'),path=require('path');let pass=0,fail=0;const ok=(c,m)=>{if(c)pass++;else{fail++;
+console.log('FAIL',m)}};
 const rd=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
 const NNAV=new Function(rd('js/npc-nav.js')+';return NNAV')(),N=NNAV;
 function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
@@ -11,8 +12,8 @@ const C=N.C;
 {const a=mkN(0,0);
  ok(N.blocks([a],.5,0,.35,2,0)===true,'a step into a person (0.5 m away, closer than before) is blocked');
  ok(N.blocks([a],.5,0,.35,.4,0)===false,'a step that leaves the person is allowed even when overlapping (never trapped)');
- ok(N.blocks([a],1.2,0,.35,2,0)===false,'1.2 m away is free (radius 0.35 + 0.4)');
- ok(N.blocks([a],.74,0,.35,3,0)===true&&N.blocks([a],.76,0,.35,3,0)===false,'the edge is at r + 0.4 = 0.75 m');
+ ok(N.blocks([a],1.2,0,.35,2,0)===false,'1.2 m away is free (radius 0.35 + 0.45)');
+ ok(N.blocks([a],.79,0,.35,3,0)===true&&N.blocks([a],.81,0,.35,3,0)===false,'the edge is at r + 0.45 = 0.80 m (Round 25: wider bodies)');
  a.m.visible=false;ok(N.blocks([a],.3,0,.35,2,0)===false,'a hidden person is not solid');a.m.visible=true;a.hid=2;ok(N.blocks([a],.3,0,.35,2,0)===false,'a person hidden by the old timer is not solid');
  ok(N.blocks([],0,0,.35,1,1)===false,'no people: no block');
  const b=mkN(5,5),c=mkN(0,0);ok(N.blocks([b,c],.5,0,.35,2,0)===true,'any of the people can block');}
@@ -99,9 +100,23 @@ ok(/:\(BAG\.jmp\(\)>1&&P\.y>\.75\)\?hitNS\(x,z,r\):\(hit\(x,z,r\)\|\|NNAV\.block
 ok((W.match(/const ns=\[\];\[([^\]]*)\]/)[1].match(/'/g).length/2)==11&&/'guru','guru'\]\.forEach/.test(W)&&(W.match(/'pengawas'/g)||[]).length>=2,'11 people: 7 murid, 2 pengawas, 2 guru');
 ok(/else NNAV\.walk\(n,dx\/d,dz\/d,dt,NX\)\}/.test(W)&&/if\(n\.ch\)return;/.test(W),'the hallway loop walks with NNAV.walk and still skips scripted NPCs (n.ch)');
 ok(/NNAV\.stuck\(ns,P,mv,Math\.hypot\(P\.x-NSTK\.x,P\.z-NSTK\.z\)>\.15\*SP\*dt,dt,NSTK\);NSTK\.x=P\.x;NSTK\.z=P\.z;nsayTick\(dt\);caneTick\(dt,t\)/.test(W)&&/if\(n\.yl>0\)NNAV\.back\(n,dt,NX\);else if\(n\.w>0\)/.test(W)&&W.includes("e.id='nsyx'"),'one NPC bubble, updated every frame');
-ok(/"js\/toilet\.js", "js\/npc-nav\.js", "js\/world\.js", "js\/cheat\.js"\]/.test(H)&&/'js\/npc-nav\.js','js\/world\.js','js\/cheat\.js'/.test(SW),'world.html loads npc-nav.js before world.js; sw.js caches npc-nav.js and cheat.js');
+ok(/"js\/toilet\.js", "js\/npc-nav\.js", "js\/world\.js", "js\/cheat\.js", "js\/lencana\.js"\]/.test(H)&&/'js\/npc-nav\.js','js\/world\.js','js\/cheat\.js'/.test(SW),'world.html loads npc-nav.js before world.js; sw.js caches npc-nav.js and cheat.js');
 const others=fs.readdirSync(path.join(__dirname,'..','js')).filter(f=>f.endsWith('.js')&&!['world.js','npc-nav.js'].includes(f)).map(f=>[f,rd('js/'+f)]);
 for(const n of['NNAV','NSAY','nsyx','nsayTick'])ok(!others.some(([f,s])=>new RegExp('\\b'+n+'\\b').test(s)),'name '+n+' is not used by other scripts');
 ok(/\bNX\b/.test(W)&&!others.some(([f,s])=>/\bNX\b/.test(s)),'NX is only used in world.js');
-ok(fs.readFileSync(path.join(__dirname,'..','js/toilet.js'),'utf8').split("\n  if(!q.d.use&&window.jkDoor&&window.jkDoor(q))return true; /* Round 20c: the quest cubicle opens with the key, in either toilet (js/jkey.js) */").join('').split("if(q&&!q.d.use&&window.jkDoorHint){const h=window.jkDoorHint(q);if(h)return h}").join('')==fs.readFileSync(path.join(__dirname,'..','_backup_round20c/js/toilet.js'),'utf8'),'toilet.js: the only changes since 19h are the two 20c quest hooks (jkDoor, jkDoorHint)');
+ok((()=>{const t=fs.readFileSync(path.join(__dirname,'..','js/toilet.js'),'utf8');return t.split('if(!q.d.use&&window.jkDoor&&window.jkDoor(q))return true;').length==2&&t.split('if(q&&!q.d.use&&window.jkDoorHint){const h=window.jkDoorHint(q);if(h)return h}').length==2})(),'toilet.js: both 20c quest hooks (jkDoor, jkDoorHint) are present once');
+/* ---- Round 24: two people meeting in a narrow corridor slip past each other, no long standing still ---- */
+{function run(count,W,seed){const r=rng(seed),ns=[];for(let i=0;i<count;i++)ns.push({m:{visible:true},x:-10+i*20/count,z:(r()-.5)*W*.8,sp:1.8+r()*.8,f:0,mv:0,hid:0,dir:i%2?1:-1});
+  const X={ns,P:{x:999,z:999},gst:false,hit:(x,z,rr)=>Math.abs(z)+rr>W/2,la:(a,b)=>b,rnd:(a,b)=>a+r()*(b-a),now:()=>1e6,say(){}};
+  let maxStall=0,cur=ns.map(()=>0),min=9,dt=.016;
+  for(let i=0;i<7000;i++){ns.forEach((n,k)=>{if(n.w>0){n.w-=dt;n.mv=0}else{const gx=n.dir>0?12:-12;if(Math.abs(gx-n.x)<.4)n.dir*=-1;else N.walk(n,Math.sign(gx-n.x),0,dt,X)}
+   if(!n.mv){cur[k]+=dt;maxStall=Math.max(maxStall,cur[k])}else cur[k]=0});
+   if(i%5==0)for(let a=0;a<ns.length;a++)for(let b=a+1;b<ns.length;b++)if(!(ns[a].gh>0)&&!(ns[b].gh>0))min=Math.min(min,Math.hypot(ns[a].x-ns[b].x,ns[a].z-ns[b].z))}
+  return{maxStall,min}}
+ const a=run(2,1.6,1),b=run(6,2.4,2),c=run(14,4,3);
+ ok(a.maxStall<1.5&&b.maxStall<1.5&&c.maxStall<1.5,'a pair in a 1.6 m corridor, 6 in 2.4 m, 14 in 4 m: nobody stands still longer than 1.5 s ('+[a,b,c].map(x=>x.maxStall.toFixed(2)).join(', ')+')');
+ ok(a.min>=C.gap-.1&&b.min>=C.gap-.1&&c.min>=C.gap-.1,'and they never get closer than the gap ('+[a,b,c].map(x=>x.min.toFixed(2)).join(', ')+')');
+ ok(C.swap<=.7&&C.jam<=3,'shorter timers: side switch after '+C.swap+' s, last-resort release after '+C.jam+' s');
+ const w=mkN(0,0),o=mkN(0,.5,0),Xs=mkX([w,o],{x:50,z:50});const z0=w.z;N.walk(w,0,1,.1,Xs);ok(w.mv===1&&(w.x!==0||w.z!==z0),'blocked by a person right ahead: it steps aside instead of standing still');
+ const w2=mkN(0,0),o2=mkN(0,.5,0),X2=mkX([w2,o2],{x:50,z:50},{hit:()=>true});X2.hit=()=>true;N.walk(w2,0,1,.1,X2);ok(w2.mv===0,'with walls all round it still waits (never steps into a wall)');}
 console.log(fail?fail+' FAILED, '+pass+' passed':'all '+pass+' checks passed');process.exit(fail?1:0);

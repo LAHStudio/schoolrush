@@ -44,7 +44,7 @@ const TOI=(()=>{
  /* ---- bubbles over NPC heads ---- */
  function bubble(txt){const e=document.createElement('div');e.className='tqx';e.textContent=txt;e.style.cssText='position:fixed;z-index:9;pointer-events:none;transform:translate(-50%,-100%);font:700 1.15em Fredoka,sans-serif;background:#fff;color:#222;border-radius:.8em;padding:.15em .5em;box-shadow:0 2px 8px #0006;white-space:nowrap;display:none';document.body.appendChild(e);return e}
  function unbub(w){if(w.e){if(w.e.parentNode)w.e.parentNode.removeChild(w.e);w.e=null}}
- function put(o,w){const e=w.e;if(!e)return;const v=new T.Vector3(o.x,2.3,o.z).project(cam);if(v.z>=1){e.style.display='none';return}e.style.left=(v.x*.5+.5)*cv.clientWidth+'px';e.style.top=(-v.y*.5+.5)*cv.clientHeight+'px';e.style.display='block'}
+ function put(o,w){const e=w.e;if(!e)return;const v=new T.Vector3(o.x,(o.m?o.m.position.y+headY(o.m):1.55)+.14,o.z).project(cam);if(v.z>=1){e.style.display='none';return}e.style.left=(v.x*.5+.5)*cv.clientWidth+'px';e.style.top=(-v.y*.5+.5)*cv.clientHeight+'px';e.style.display='block'}
  /* ---- NPCs that visit the toilet (called by world.js when an NPC reaches TL/BR; true = taken over, false = already visited, carry on) ---- */
  function visit(n){if(n.wcX){n.wcX=0;return false}if(typeof TOIL==='undefined'||!n.m||!n.m.userData)return false;
   const r=TOIL.find(q=>q.girl==(n.m.userData.g=='f'?1:0));if(!r)return false;

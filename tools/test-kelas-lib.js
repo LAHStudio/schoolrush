@@ -6,7 +6,7 @@ class M extends O{constructor(g,m){super();this.geometry=g;this.material=m}}
 const G=function(){return{}};
 global.T={Group:O,Mesh:M,BoxGeometry:G,CylinderGeometry:G,ConeGeometry:G,SphereGeometry:G,IcosahedronGeometry:G,PlaneGeometry:G,MeshPhongMaterial:function(o){return Object.assign({},o)}};
 eval(fs.readFileSync('js/chars.js','utf8').split('\n').slice(0,2).join('\n').replace('const mat=','global.mat=').replace('function bx','global.bx=function bx'));
-global.npc=()=>new O();
+global.npc=()=>new O();global.seatY=()=>.04;
 let src=fs.readFileSync('js/kelas-lib.js','utf8').replace(/^const (LBW|LBK)=/mg,'global.$1=').replace(/^function (libWindow|buildLib)/mg,'global.$1=function');eval(src);
 eval(fs.readFileSync('js/kelas-data.js','utf8').replace('const KL=','global.KL='));
 const sc=new O(),cols=[],FG={back:[],left:[],right:[],front:[]},FDS=[],fset=(g,b)=>FDS.push({g,b});

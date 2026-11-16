@@ -14,10 +14,10 @@ const DR=[0,1,2,3,4,5].map(i=>['a','b','c','d',0,1,'Bilik '+i,i,i]);
 const ctx={LS,SS,$:E,T:deep(),sc:{add(){}},cam:{},cv:{clientWidth:400,clientHeight:300},P,cp,cy:0,hold:0,ns,GW,GH,GC,GX,GZ,bk,N8:[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]],
  DR,DD:[],BK:[],BKN:[],ND:{TS:[0,0],BS:[1,1]},X:v=>v,Z:v=>v,cell:(x,z)=>[Math.floor((x-GX)/GC),Math.floor((z-GZ)/GC)],la:(a,b,k)=>b,anim(){},npc:()=>mkNpc(0,0),R:a=>a[0],rnd:(a,b)=>a,
  toast:m=>toasts.push(m),say:m=>says.push(m),tone:(...a)=>tones.push(a),bellSound(){},SRA:{whistle(){}},flood(){},tgt:-1,dist:null,loading:f=>f(),nav:p=>navs.push(p),document:{createElement:()=>E('x'+Math.random()),body:{appendChild(c){made.push(c)},classList:{add(){},remove(){}}}},
- navigator:{vibrate(){}},drawMM(){},HUD:{set(){}},WALLET:{topUp:()=>0,CFG:{pocket:300},fmt:v=>v},cur:{save:null,level:1},save(){},dayOk:()=>false,gradeOf:()=>'A',gcls:()=>'',PF:{},curKey:()=>'k',hit:()=>false,place(){},
+ navigator:{vibrate(){}},drawMM(){},HUD:{set(){}},WALLET:{pocket:()=>0,setDue(){},msg:()=>'',CFG:{pocket:300},fmt:v=>v},cur:{save:null,level:1},save(){},dayOk:()=>false,gradeOf:()=>'A',gcls:()=>'',PF:{},curKey:()=>'k',hit:()=>false,place(){},
  setInterval(){},addEventListener(){},console,Math,JSON,Object,Array,Number,String,Date,Int16Array,Uint8Array};
 Object.defineProperty(ctx,'halt',{get:()=>halt,set:v=>{halt=v}});
-ctx.window=ctx;vm.createContext(ctx);
+ctx.window=ctx;ctx.headY=()=>1.6;vm.createContext(ctx);
 const S=R('js/story.js'),SRC=S.replace(/\}\)\(\);\s*$/,'window.__T={ev:s=>eval(s)};})();');ok(SRC!==S,'story.js ends with the IIFE');vm.runInContext(SRC,ctx);const V=s=>ctx.__T.ev(s);
 /* A. static: whistle count unchanged, new names, old text kept */
 ok((S.match(/SRA\.whistle\(\)/g)||[]).length==3,'still 3 whistles in story.js (test-audio)');

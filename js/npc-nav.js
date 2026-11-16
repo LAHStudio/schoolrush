@@ -3,7 +3,7 @@
    - walk(): one walking step of a hallway NPC. It steers to its right around NPCs ahead (never into a wall or prop), never steps closer than C.gap to another NPC
      or C.pgap to the player (the player is not steered around: the NPC waits, says "Tepi sikit!" and after C.wait seconds it pauses and tries the other side). */
 const NNAV=(()=>{
- const C={look:1.8,gap:.55,pgap:.75,rad:.4,wait:2,swap:1.5,jam:8,sayAt:.8,cool:5000,near:1.1,turn:.5,rel:2,relT:1.5,yield:1.4,far:1.7,bk:1.2,
+ const C={look:2.1,gap:.7,pgap:.85,rad:.45,wait:2,swap:.7,jam:3,sayAt:.8,cool:5000,near:1.2,turn:.5,rel:2,relT:1.5,yield:1.4,far:1.7,bk:1.2,
   T:['Eh, sabar!','Oi!'],
   L:['Tepi sikit!','Tumpang lalu!','Excuse me!']};
  const ST={bh:false}; /* bh: a move of the player was refused by a person since the last stuck() call */
@@ -20,10 +20,17 @@ const NNAV=(()=>{
   const closer=(o,gap)=>{const a=Math.hypot(nx-o.x,nz-o.z);return a<gap&&a<Math.hypot(n.x-o.x,n.z-o.z)};
   const nBlk=!(n.gh>0)&&X.ns.some(o=>o!==n&&alive(o)&&closer(o,C.gap)),pBlk=!X.gst&&closer(X.P,C.pgap);
   if(n.gh>0)n.gh-=dt;
+  if(nBlk&&!pBlk){ /* Round 24: boxed in by a PERSON only: slip around it (about 57 or 92 degrees off the heading, own side first) instead of standing still */
+   const a0=Math.atan2(vx,vz),sdn=sd<0?-1:1;
+   for(const dl of[sdn*1,-sdn*1,sdn*1.6,-sdn*1.6]){const cx=Math.sin(a0+dl),cz=Math.cos(a0+dl),sx=n.x+cx*sp,sz=n.z+cz*sp;
+    if(X.hit(sx,sz,.25))continue;
+    if(X.ns.some(o=>o!==n&&alive(o)&&Math.hypot(sx-o.x,sz-o.z)<C.gap&&Math.hypot(sx-o.x,sz-o.z)<Math.hypot(n.x-o.x,n.z-o.z)))continue;
+    if(!X.gst&&Math.hypot(sx-X.P.x,sz-X.P.z)<C.pgap&&Math.hypot(sx-X.P.x,sz-X.P.z)<Math.hypot(n.x-X.P.x,n.z-X.P.z))continue;
+    n.bk=0;n.tb=Math.max(0,(n.tb||0)-dt*.5);n.x=sx;n.z=sz;n.f=X.la(n.f,Math.atan2(cx,cz),Math.min(1,dt*8));n.mv=1;return true}}
   if(nBlk||pBlk){n.mv=0;n.bk=(n.bk||0)+dt;if(nBlk)n.tb=(n.tb||0)+dt;
    if(pBlk&&n.bk>C.sayAt){const t=X.now();if(t-(n.sa||0)>=C.cool){n.sa=t;X.say(n,C.L[Math.floor(X.rnd(0,C.L.length))%C.L.length])}}
    if(nBlk&&n.tb>C.jam){n.tb=0;n.gh=1.5} /* last resort: after C.jam seconds of being boxed in by people (not the player) it may slip through for 1.5 s, so no jam can last */
-   if(n.bk>(pBlk?C.wait:C.swap)){n.bk=0;n.w=X.rnd(.4,1.6);n.sd=pBlk?-sd:(X.rnd(0,1)<.5?-1:1)}
+   if(n.bk>(pBlk?C.wait:C.swap)){n.bk=0;n.w=pBlk?X.rnd(.4,1.6):X.rnd(.1,.4);n.sd=pBlk?-sd:(X.rnd(0,1)<.5?-1:1)}
    return false}
   n.bk=0;n.tb=Math.max(0,(n.tb||0)-dt*.5);n.x=nx;n.z=nz;n.f=X.la(n.f,Math.atan2(vx,vz),Math.min(1,dt*8));n.mv=1;return true}
  /* Round 19i: a person turns back. Set by stuck() (o.yl seconds left); world.js calls back() instead of walk(). The person walks straight away from the player (or 45 degrees to either side if that is blocked by a wall, prop or person) until C.far metres away, then pauses and tries another side. */

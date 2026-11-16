@@ -63,34 +63,27 @@ function env(curv,withDom){const saves=[],calls=[];const doc=withDom?mkDoc():und
  const a=mk(),g={traverse(f){[a,...g.late].forEach(f)},late:[]};B.ghost(g,true,.4);const m0=a.material;ok(a.material.transparent&&a.material.opacity==.4,'ghost sets see-through');
  const b=mk();g.late.push(b);ok(b.material.opacity==1,'a cosmetic mesh added later is not see-through yet');B.ghost(g,true,.4);ok(b.material.transparent&&b.material.opacity==.4&&a.material===m0,'ghost again: the new mesh is cloned and ghosted, old materials not cloned twice');
  B.ghost(g,false,1);ok(!a.material.transparent&&!b.material.transparent&&a.material.opacity==1,'ghost off restores both');}
-/* ---------- 8. chars.js with a three.js stub ---------- */
-function mkThree(){const boxes=[],cv=[];class V{constructor(){this.x=0;this.y=0;this.z=0}set(x,y,z){this.x=x;this.y=y;this.z=z;return this}}
- class Mesh{constructor(g,m){this.geometry=g;this.material=m;this.position=new V();this.rotation=new V();this.isMesh=true}}
- class Group{constructor(){this.children=[];this.position=new V();this.rotation=new V();this.scale={setScalar(){}}}add(...a){this.children.push(...a)}traverse(f){f(this);this.children.forEach(c=>c.traverse?c.traverse(f):f(c))}}
- const T={Mesh,Group,Vector2:V,BoxGeometry:function(w,h,d){this.w=w;this.h=h;this.d=d;boxes.push(this)},PlaneGeometry:function(){},SphereGeometry:function(){},LatheGeometry:function(){this.attributes={position:{}}},
-  MeshPhongMaterial:function(o){this.color=o.color},MeshBasicMaterial:function(o){this.map=o.map},CanvasTexture:function(c){this.c=c}};
- const doc={createElement:()=>{const ops=[];const st={};const ctx=new Proxy({},{get:(t,k)=>k in st?st[k]:(...a)=>{ops.push([k,a,st.fillStyle,st.globalCompositeOperation])},set:(t,k,v)=>{st[k]=v;return true}});const c={width:0,height:0,ops,getContext:()=>ctx};cv.push(c);return c}};return{T,doc,cv}}
-function load(worn){const m=mkThree();const fn=new Function('T','document','R','rnd','BAG','SK','HC',CSRC+";return{player,npc}");const BAG=worn===undefined?undefined:{worn:()=>worn};return{p:fn(m.T,m.doc,a=>a[0],()=>0,BAG,['#b87a50'],['#14161d']),m}}
-const cntMesh=g=>{let n=0;g.traverse(o=>{if(o.isMesh)n++});return n};
+/* ---------- 8. chars.js with a three.js stub (Round 23: the chibi engine; tools/three-stub.js builds real vertex arrays, so tris and meshes are real counts) ---------- */
+const {mk:mkStub,stats:stubStats}=require('./three-stub.js');
+function load(worn){const m=mkStub();let cv=0;const doc={createElement:t=>{if(t==='canvas')cv++;return m.doc.createElement(t)}};const fn=new Function('T','document','R','rnd','BAG','SK','HC',CSRC+";return{player,npc}");const BAG=worn===undefined?undefined:{worn:()=>worn};return{p:fn(m.T,doc,a=>a[0],()=>0,BAG,['#b87a50'],['#14161d']),cv:()=>cv}}
+const cntMesh=g=>stubStats(g).meshes;
 const find=(g,f)=>{let n=0;g.traverse(o=>{if(o.isMesh&&f(o))n++});return n};
-{const base=cntMesh(load().p.player('m','uni',{}));
+{const base=cntMesh(load().p.player('m','uni',{})),baseg=cntMesh(load().p.player('f','uni',{}));
  ok(cntMesh(load([]).p.player('m','uni',{}))==base&&cntMesh(load(null).p.player('m','uni',{}))==base,'no BAG, nothing worn or null: same player as before');
- {const z=load();z.p.player('m','uni',{});ok(z.m.cv.length==1,'no cosmetics: only the one face canvas')}
- const cap=load(['cap']).p.player('m','uni',{});ok(cntMesh(cap)==base+3&&find(cap,o=>o.material.color=='#c8293a'&&o.geometry.w==.62)==1,'cap: 3 boxes (crown, peak, button)');
- const sp=find(load().p.player('m','uni',{hs:'spiky'}),o=>o.geometry.w==.1&&o.geometry.h==.14),spc=find(load(['cap']).p.player('m','uni',{hs:'spiky'}),o=>o.geometry.w==.1&&o.geometry.h==.14);
- ok(sp==5&&spc==0,'spiky hair does not poke through the cap');
- const bun=find(load(['cap']).p.player('f','uni',{hs:'bun',nt:true}),o=>o.geometry.d===undefined);ok(true,'bun girl with cap builds');
- const ey=load(['eye']).p.player('m','uni',{});ok(cntMesh(ey)==base+5&&find(ey,o=>o.material.color=='#15151a')==5,'eyepatch without tudung: patch, front strap, two side straps, back strap');
- const eyg=load(['eye']).p.player('f','uni',{});const baseg=cntMesh(load().p.player('f','uni',{}));ok(cntMesh(eyg)==baseg+2,'eyepatch with tudung: only patch and front strap (the rest would be under the tudung)');
- const capg=load(['cap']).p.player('f','uni',{});ok(cntMesh(capg)==baseg+3,'cap on the tudung look');
- const all=load(['cap','eye','beard','mos']).p.player('m','uni',{hc:'#aa5500'});ok(cntMesh(all)==base+3+5,'all four together: no extra meshes for beard and moustache (drawn on the face)');
- const bm=load(['beard']);bm.p.player('m','uni',{hc:'#aa5500'});ok(bm.m.cv.length==2,'beard: a second canvas layer is used');
- const lay=bm.m.cv[1].ops,face=bm.m.cv[0].ops;ok(lay.some(o=>o[0]=='fill'&&o[2]=='#aa5500')&&lay.some(o=>o[3]=='destination-out'),'beard uses the hair colour and cuts the mouth out of its own layer');
- ok(face.some(o=>o[0]=='drawImage'),'beard layer is drawn onto the face');
- const mm=load(['mos']);mm.p.player('m','uni',{hc:'#aa5500'});const el=mm.m.cv[0].ops.filter(o=>o[0]=='ellipse'&&o[1][1]==87);ok(mm.m.cv.length==1&&el.length==2&&el.every(o=>o[2]=='#aa5500'),'moustache: two lobes on the face canvas in the hair colour');
- const dflt=load(['beard','mos']);dflt.p.player('m','uni',{});ok(dflt.m.cv[1].ops.some(o=>o[2]=='#14161d'),'default hair colour is used when none is set');
- ok(CSRC.split('\n').filter(l=>/BAG/.test(l)).every(l=>/^function player\(/.test(l))&&/function player\([^\n]*BAG\.worn/.test(CSRC)&&!/function npc[^\n]*(BAG|cos)/.test(CSRC),'only player() reads BAG.worn(); npc() never gets cosmetics');
- const pe=load(['cap']).p.player('m','pe',{});ok(cntMesh(pe)==cntMesh(load().p.player('m','pe',{}))+3,'PE outfit also gets the cap');}
+ {const z=load();z.p.player('m','uni',{});ok(z.cv()==1,'no cosmetics: only the one face canvas')}
+ {const z=load();z.p.player('m','uni',{});z.p.player('f','uni',{});z.p.npc('murid','m');ok(z.cv()<=3,'face textures are cached by eye size and mouth, not one canvas per character')}
+ const d=k=>cntMesh(load([k]).p.player('m','uni',{hc:'#aa5500'}))-base,dg=k=>cntMesh(load([k]).p.player('f','uni',{}))-baseg;
+ ok(d('cap')==3&&dg('cap')==3&&find(load(['cap']).p.player('m','uni',{}),o=>o.material.color=='#c8293a')==1,'cap: crown, peak and button (red crown), also on the tudung look');
+ ok(d('eye')==4&&dg('eye')==4,'eyepatch: patch and straps');ok(d('beard')==5&&dg('beard')==5,'beard: its own meshes');ok(d('mos')==1&&dg('mos')==1,'moustache: one mesh');
+ ok(cntMesh(load(['cap','eye','beard','mos']).p.player('m','uni',{hc:'#aa5500'}))==base+3+4+5+1-1,'four together (the beard already carries the lip bridge, so one mesh less)');
+ ok(find(load(['cap']).p.player('f','uni',{hs:'bun',nt:true}),o=>o.material.color=='#c8293a')==1,'bun girl with cap builds');
+ const pe=cntMesh(load(['cap']).p.player('m','pe',{}))-cntMesh(load().p.player('m','pe',{}));ok(pe==3,'PE outfit also gets the cap');
+ const bm=load(['beard','mos']);bm.p.player('m','uni',{});ok(bm.cv()==1,'beard and moustache are meshes, no extra canvas layer');
+ const D=load();const pl=D.p.player('m','uni',{});ok(pl.userData.legs.length==2&&pl.userData.arms.length==2&&pl.userData.B&&pl.userData.g=='m'&&Math.abs(pl.userData.legs[0].position.y-.39)<1e-9&&Math.abs(pl.userData.arms[0].position.y-.72)<1e-9,'rig contract kept: legs[2], arms[2], B, g; hips y .39, shoulders y .72');
+ ok(Math.abs(pl.userData.arms[0].userData.z0+.26)<1e-9&&Math.abs(pl.userData.arms[1].userData.z0-.26)<1e-9&&pl.userData.arms[0].rotation.z==pl.userData.arms[0].userData.z0,'arms keep their A-pose angle in userData.z0 (mop.js restores it)');
+ const st=stubStats(pl);ok(st.tris<1500&&st.meshes<45,'budget: a player stays under 1500 triangles and 45 meshes ('+st.tris+' tris, '+st.meshes+' meshes)');
+ const fnsrc=CSRC.slice(CSRC.indexOf('function npc(role, g, x) {'),CSRC.indexOf('function anim(G, t, mv) {'));ok(fnsrc.length>500&&!/BAG|cos\.|BAG\.worn/.test(fnsrc),'npc() never reads BAG.worn() (the janitor has its own cos list)');
+ ok(CSRC.split('\n').map(l=>l.replace(/\/\*.*?\*\//g,'')).filter(l=>/BAG/.test(l)).length==1&&/cos: typeof BAG !== 'undefined' && BAG\.worn \? BAG\.worn\(\) : null/.test(CSRC),'only player() reads BAG.worn()');}
 /* ---------- 9. portrait ---------- */
 {const fs2=new Function('ESC',HSRC.match(/function faceSvg[\s\S]*?\n return h\+'<\/svg>'}/)[0]+";return faceSvg")(s=>String(s).replace(/[<>&"]/g,''));
  const plain=fs2('m',{},null);ok(plain===fs2('m',{},[])&&plain===fs2('m',{}),'portrait without cosmetics is unchanged');
@@ -105,7 +98,31 @@ const find=(g,f)=>{let n=0;g.traverse(o=>{if(o.isMesh&&f(o))n++});return n};
  ok(!rd('index.html').includes('js/bag.js'),'index.html does not load bag.js, so the setup preview is plain');
  ok(['world.html','kantin.html','luar.html','padang.html','kelas.html'].every(f=>rd(f).includes('js/bag.js')),'all five game pages load bag.js');
  ok(/pm!==ghP/.test(rd('js/world.js'))&&/pm!==ghP/.test(rd('js/luar.js')),'world and luar re-ghost a rebuilt player');
- const sw=rd('sw.js');ok(/CACHE='sr-r20d'/.test(sw)&&sw.includes("'js/chars.js'")&&sw.includes("'js/bag.js'"),'sw.js: cache sr-r20d');
+ const sw=rd('sw.js');ok(/CACHE='sr-r27'/.test(sw)&&sw.includes("'js/chars.js'")&&sw.includes("'js/bag.js'"),'sw.js: cache sr-r27');
  ok(rd('css/style.css').includes('.bgxh{'),'css has the header row rule');
  ok(/## Pusingan 17/.test(rd('README.md')),'README has a Round 17 entry');}
+/* ---------- 9. Round 20e: Rompi Tukang Cuci (the vest): a reward, never sold. Round 23: drawn by the chibi engine ---------- */
+{const base=cntMesh(load().p.player('m','uni',{}));
+ const v=load(['vest']).p.player('m','uni',{});
+ ok(cntMesh(v)==base+3&&find(v,o=>o.material.color=='#f28c1c')==1&&find(v,o=>o.material.color=='#eef0be')==2,'the vest: one orange body and two reflective stripes');
+ const bf=cntMesh(load().p.player('f','uni',{}));ok(cntMesh(load(['vest']).p.player('f','uni',{}))==bf+3,'the vest is drawn on the girl too');
+ ok(cntMesh(load(['cap','eye','beard','mos','vest']).p.player('m','uni',{hc:'#aa5500'}))==base+15,'all five cosmetics together');
+ const jn=load().p.npc('cuci','m');ok(find(jn,o=>o.material.color=='#f28c1c')==1&&jn.userData.g=='m','the janitor NPC wears the vest and is always a man');
+ ok(find(load().p.npc('murid','m'),o=>o.material.color=='#f28c1c')==0&&find(load().p.npc('pengawas','m'),o=>o.material.color=='#f28c1c')==0,'no murid or pengawas wears the vest');
+ const roles=['murid','pengawas','guru','cuci','guard','canteen','icecream','runcit','nasilemak','penjual'];let okr=true;for(const r of roles)for(const g of ['m','f',undefined]){try{const n=load().p.npc(r,g);if(!n.userData.legs||n.userData.arms.length!=2||!n.userData.g)okr=false}catch(e){okr=false;console.log(r,g,e.message)}}
+ ok(okr,'every role builds for m, f and no gender (penjual, guard, canteen, icecream, runcit, nasilemak, guru, cuci, murid, pengawas)');
+ ok(load().p.npc('nasilemak','m').userData.g=='f'&&load().p.npc('guard','f').userData.g=='m','nasilemak is always a woman, guard always a man');
+ const cn=load().p.npc('canteen','f',{apronCol:'#2fa39c',h:2.1});ok(find(cn,o=>o.material.color=='#2fa39c')>=1&&Math.abs(cn.scale.x-2.1*1.08)<1e-9,'canteen staff: apron in the stall colour, height from the caller, times the adult scale 1.08');
+}
+{const c={name:'A',w:{c:1000}};const{BAG:B,WALLET:W}=env(c);
+ ok(B.COSALL.join()=='cap,eye,beard,mos,vest'&&B.COSORD.join()=='cap,eye,beard,mos'&&B.COS.vest&&B.COS.vest.n=='Rompi Tukang Cuci'&&B.IT.vest===undefined,'COSALL has the vest, the shop list (COSORD) does not');
+ ok(!B.price('vest')&&B.buyCos('vest')=='bad'&&!B.owns('vest')&&W.get()==1000&&c.cos===undefined,'the vest cannot be bought: no price, no money taken, nothing created');
+ ok(B.wear('vest').ok===false,'cannot wear what is not owned');
+ ok(B.grantCos('vest')===true&&B.owns('vest')&&c.cos.own.vest==1&&B.grantCos('vest')===false&&W.get()==1000,'a reward: granted once, no money involved');
+ ok(B.grantCos('nope')===false&&B.grantCos('')===false,'only known cosmetics can be granted');
+ B.wear('vest');ok(B.isOn('vest')&&B.worn().join()=='vest'&&c.cos.on.vest==1,'wear: it is worn and saved in cur.cos.on');B.doff('vest');ok(!B.isOn('vest')&&B.worn().length==0&&B.owns('vest'),'take off: still owned');
+ const cap=env({name:'B',w:{c:5000}}).BAG;cap.buyCos('cap');cap.grantCos('vest');cap.wear('cap');cap.wear('vest');ok(cap.worn().join()=='cap,vest','cap and vest together, in the same order as COSALL')}
+{const c={name:'A',w:{c:5000}};const e=env(c,1),B=e.BAG,d=e.doc;B.grantCos('vest');B.open();const t=d.body.textContent;ok(/Barang Gaya/.test(t)&&/Rompi Tukang Cuci/.test(t)&&/Belum dipakai/.test(t),'the bag shows the vest under Barang Gaya');
+ const b=btns(d).filter(x=>x.textContent=='Pakai');ok(b.length==1,'with a Pakai button');b[0].onclick();ok(B.isOn('vest')&&B.worn().includes('vest'),'the button wears it');B.close();
+ B.openRuncit();const t2=d.body.textContent;ok(!/Rompi/.test(t2)&&/Topi/.test(t2),'the Kedai Runcit never lists the vest');B.close()}
 console.log(fail?fail+' FAILED, '+pass+' passed':'OK '+pass+' checks');process.exit(fail?1:0);

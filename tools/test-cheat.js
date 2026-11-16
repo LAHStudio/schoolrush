@@ -40,7 +40,7 @@ if(HAVE){
 }else{skip=1;console.log('NOTE: SR_CODE1 / SR_CODE2 not set: the real code checks were skipped')}
 /* ---- wiring ---- */
 const H=rd('world.html'),SW=rd('sw.js'),R=rd('README.md');
-ok(/"js\/world\.js", "js\/cheat\.js"\]/.test(H)&&/'js\/cheat\.js'/.test(SW),'world.html loads cheat.js last (the Mod Jalan-jalan page only); sw.js caches it');
+ok(/"js\/world\.js", "js\/cheat\.js", "js\/lencana\.js"\]/.test(H)&&/'js\/cheat\.js'/.test(SW),'world.html loads cheat.js last (the Mod Jalan-jalan page only); sw.js caches it');
 ok(!/index\.html|kantin\.html|padang\.html|kelas\.html|luar\.html/.test(SW.match(/PRE=\[[^\]]*\]/)[0].match(/cheat/)||'')&&!['index.html','kantin.html','padang.html','kelas.html','luar.html'].some(f=>rd(f).includes('cheat.js')),'no other page loads cheat.js');
 ok(!/cheat/i.test(R.slice(R.indexOf('## Pusingan 19h')))&&!/\bAKU[A-Z]{3,}|kod rahsia|kod tipu|kod pemilik/.test(R.slice(R.indexOf('## Pusingan 19h'))),'the README entry for this round does not talk about codes');
 const others=fs.readdirSync(path.join(root,'js')).filter(f=>f.endsWith('.js')&&f!='cheat.js').map(f=>[f,rd('js/'+f)]);

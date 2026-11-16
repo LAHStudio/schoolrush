@@ -8,7 +8,7 @@
    Found: cur.jk.key=1, bag row "Kunci Tandas" (it opens the locked cubicle in 20c). Spots go quiet once the key is found.
    Janitor (20b): the NPC with role 'cuci' (one of the 11, chars.js) mumbles about the lost key now and then when the player is near (jkTick), until the key is found.
    Save: cur.jk = {f:[6 x 0/1] pieces, ass:[6 board ids], rd:[8 reading counts], loc:0..4 hiding place, key:0/1, done:0/1 both chests taken, lt:[0/1,0/1], th:0..2}. Lives in the slot profile (Padam / new slot = fresh quest). Old saves have no jk: nothing is created until the first board is read or spot searched. 20a saves (loc 0) stay valid: SPOTS[0] is still the east plant.
-   Mop Terbang (20d): the girls' chest reward is ridden from the bag (js/mop.js). Locked cubicle (20c): with the key, E on the locked (red) cubicle door of EITHER toilet (toilet.js asks window.jkDoor first, so the wrong-gender rule does not stop it) runs a short script (door opens, the player steps in, the chest lid opens,
+   Mop Terbang (20d): the girls' chest reward is ridden from the bag (js/mop.js). Janitor Vest (20e): the boys' chest reward is a wearable (bag.js COS.vest, 'Barang Gaya', saved in cur.cos like the cap) drawn by chars.js; the janitor wears it too. Locked cubicle (20c): with the key, E on the locked (red) cubicle door of EITHER toilet (toilet.js asks window.jkDoor first, so the wrong-gender rule does not stop it) runs a short script (door opens, the player steps in, the chest lid opens,
    the reward is granted the instant it opens, a card shows it, the player steps out; ~3 s, CFG.q): boys' chest = Rompi Tukang Cuci, girls' chest = Mop Terbang. It is refused while a prefect already chases (lockPf). The wrong-toilet chase itself is the existing toilet rule
    (entering the other room starts the 3 s countdown), that is the gamble. A looted cubicle becomes a normal usable one (green door, chest open and empty). The key stays in the bag until both chests are taken. Janitor thanks once (th 0..2) when the key is found.
    cur.jk also has lt:[boys chest taken, girls chest taken] (vest = lt[0], mop = lt[1]), th:0..2 (janitor thanks said), done = both. Old saves get lt [0,0], th 0.
@@ -153,7 +153,7 @@ const JK=(()=>{
   return true}
  function hint(){if(typeof halt!=='undefined'&&halt)return '';if(busy())return '';if(near()>=0)return 'Baca papan';if(nearSpot()>=0){const s=st(false);if(!s||!s.key)return 'Siasat'}return ''}
  /* ---- the locked cubicle and its chest (20c) ---- */
- const RW=[{i:'\uD83E\uDDBA',n:'Rompi Tukang Cuci',say:'Wah! Rompi tukang cuci!',sub:'Pakaian baharu! Tengok dalam beg.',d:'Hadiah tandas lelaki. Belum boleh dipakai lagi.',b:'Pakai'},
+ const RW=[{i:'\uD83E\uDDBA',n:'Rompi Tukang Cuci',say:'Wah! Rompi tukang cuci!',sub:'Pakaian baharu! Pakai dari beg (Barang Gaya).',d:'Hadiah tandas lelaki. Pakai dari Barang Gaya.',b:'Pakai'},
   {i:'\uD83E\uDDF9',n:'Mop Terbang',say:'Eh, mop ni bergetar-getar!',sub:'Mop ajaib! Tengok dalam beg.',d:'Hadiah tandas perempuan. Terbang pada kelajuan berjalan, tiada kelebihan.',b:'Naik'}];
  const doorI=q=>typeof TOIL!=='undefined'&&q&&q.r?TOIL.indexOf(q.r):-1;
  /* is q (a door from toilet.js) the quest cubicle that the key opens now? locked, key in the bag, chest not taken yet */
@@ -166,7 +166,9 @@ const JK=(()=>{
   seq={q,i:doorI(q),ph:0,t:0,a:0};if(typeof halt!=='undefined')halt=true;q.d.kt=1;return true}
  const doorHint=q=>!seq&&doorOk(q)?'Buka dengan kunci':'';
  /* take chest i (0 boys = vest, 1 girls = mop): true only the first time */
- function loot(i){const s=st(false);if(!s||!isI(i,0,1)||s.lt[i])return false;s.lt[i]=1;s.done=s.lt[0]&&s.lt[1]?1:0;persist();return true}
+ function loot(i){const s=st(false);if(!s||!isI(i,0,1)||s.lt[i])return false;s.lt[i]=1;s.done=s.lt[0]&&s.lt[1]?1:0;if(i===0)grantVest();persist();try{if(window.sokThanks)window.sokThanks()}catch(e){} /* Round 21: one soft thank-you card per device (js/sokong.js) */return true}
+ /* the boys chest: the Rompi Tukang Cuci becomes a wearable of the bag (cur.cos.own.vest, wear/take off like the cap) */
+ function grantVest(){try{if(typeof window!=='undefined'&&window.bagGrantCos)return window.bagGrantCos('vest')}catch(e){}return false}
  function rewardCard(w){if(!hasUI())return;css();unpop();pop=el('div');pop.id='jkxp';const ic=el('span',null,w.i);ic.style.fontSize='2.4em';pop.append(ic,el('span',null,w.n+' \u2013 '+w.sub));document.body.append(pop);popT=setTimeout(unpop,CFG.popMs+1500)}
  function reward(i){const w=RW[i];try{tone(523,0,.1,'triangle',.1);tone(659,.1,.1,'triangle',.1);tone(784,.2,.1,'triangle',.1);tone(1046,.32,.25,'triangle',.1)}catch(e){}if(typeof say=='function')say(w.say);rewardCard(w)}
  /* the script after E on the door: phase 0 walk to the door then into the cubicle, 1 the chest opens (reward at the end of it), 2 a short pause, 3 walk out */
@@ -176,7 +178,8 @@ const JK=(()=>{
   else if(u.ph==2){if(u.t>=Q.hold){u.ph=3;u.t=0}}
   else if(walk(P,d.x,d.z,Q.walk,dt)){P.f=0;d.kt=0;seq=null;if(typeof halt!=='undefined')halt=false}}
  /* every frame: the chest lids follow the state, and a looted cubicle becomes a normal green one (usable) */
- function syncWorld(dt){if(typeof TOIL=='undefined')return;const s=st(false);
+ function syncWorld(dt){const s0=st(false);try{if(s0&&s0.lt[0]&&typeof window!=='undefined'&&window.bagGrantCos&&window.bagOwnsCos&&!window.bagOwnsCos('vest'))window.bagGrantCos('vest')}catch(e){}   /* a 20c save that already took the chest gets the vest too */
+  if(typeof TOIL=='undefined')return;const s=s0;
   TOIL.forEach((r,i)=>{const d=r.doors&&r.doors[2];if(!d||!d.chest)return;const got=!!(s&&s.lt[i]),want=got||(seq&&seq.i==i&&seq.ph>=1)?1:0,c=d.chest;
    if(!d.jki){d.jki=1;c.k=got?1:0;c.lid.rotation.x=-1.9*c.k}
    if(c.k!==want){const st2=(dt||0)/CFG.q.lid;c.k=c.k<want?Math.min(want,c.k+st2):Math.max(want,c.k-st2);c.lid.rotation.x=-1.9*c.k}
@@ -200,7 +203,7 @@ const JK=(()=>{
   if(!s.done&&(n||s.key)){R.push({h:'Kunci Hilang'});
    if(s.key)R.push({i:'\uD83D\uDD11',n:'Kunci Tandas',d:'Kunci bilik tandas yang hilang. Buka bilik yang berkunci di tandas.',q:'1',b:'Simpan',off:true});
    if(n)R.push({i:'\uD83E\uDDE9',n:'Cebisan Gambar',d:n>=CFG.n?'Gambar sudah lengkap. Lihat semula.':'Jumpa '+n+' daripada '+CFG.n+' cebisan di papan kenyataan.',q:n+'/'+CFG.n,b:'Lihat',go:()=>{setTimeout(view,0);return{close:true}}})}
-  if(any){R.push({h:'Hadiah Tandas'});[1,0].forEach(i=>{if(s.lt[i])R.push(i==1?mopRow():{i:RW[i].i,n:RW[i].n,d:RW[i].d,q:'1',b:RW[i].b,off:true})})}
+  if(s.lt[1])R.push({h:'Hadiah Tandas'},mopRow());   /* the vest is a wearable: it is in 'Barang Gaya' of the bag with the cap and the moustache (bag.js) */
   return R}
  if(typeof window!=='undefined'){window.jkGo=go;window.jkHint=hint;window.jkTick=tick;window.jkDoor=door;window.jkDoorHint=doorHint}
  return{CFG,SPOTS,LINES,JL,TH,RW,door,doorHint,doorOk,loot,seqStep,syncWorld,seqState:()=>seq,st,fresh,okS,read,collect,count,search,rows,view,preview,poly,edge,pieceCanvas,paintTable,near,nearSpot,pos,camPose,snap,go,hint,tick,popup}

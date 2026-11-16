@@ -53,9 +53,21 @@ for(const [file,start,end] of [['js/world-build.js','function throwIt(b){','\nco
  ok(/if\(r\)\{say\('Gerai ini sudah selesai/.test(s),'talk() blocks finished stalls, so a finished stall is never charged twice');
  ok(s.includes("STORY?' · '+WALLET.fmt(WALLET.CFG.stall[i])"),'Mula button shows the price in Mod Kelas only');}
 /* ---- freshDay top-up ---- */
-{const s=rd('js/story.js');ok(/function freshDay\(\)\{\n const tp=WALLET\.topUp\(WALLET\.CFG\.pocket\);/.test(s),'story.js: freshDay tops the wallet up to the pocket money');
- ok(s.split('WALLET.topUp').length==2,'topUp is called in one place only (a new school day), not on Sambung');
- ok(/if\(tp\)toast\('Duit saku hari ini: '\+WALLET\.fmt\(WALLET\.CFG\.pocket\)/.test(s),'toast only when something was added');}
+{const s=rd('js/story.js'),lj=rd('js/luar.js');ok(/function freshDay\(\)\{\n const tp=WALLET\.pocket\(\);/.test(s),'story.js: freshDay asks for the pocket money (floor, only if due)');
+ ok(s.split('WALLET.topUp').length==1&&s.split('WALLET.pocket()').length==2,'story.js no longer calls topUp directly; pocket() once');
+ ok(/if\(tp\)toast\(WALLET\.msg\(tp\),2600\)/.test(s),'toast only when something was added');
+ ok(s.split('WALLET.setDue()').length==2&&/cur\.save=null;save\(\);WALLET\.setDue\(\);/.test(s),'endDay marks the pocket money due again (once)');
+ ok(/if\(STORY&&flow=='arrive'&&typeof WALLET!='undefined'\)\{const a=WALLET\.pocket\(\);if\(a\)setTimeout\(\(\)=>toast\(WALLET\.msg\(a\),3000\),3300\)\}/.test(lj)&&lj.split('WALLET.pocket()').length==2,'luar.js: pocket money at the Mod Kelas bus arrival only (once)');}
+/* ---- Round 22: pocket money rule ---- */
+{const c1={name:'A'};let W=mkWallet(c1).W;
+ ok(W.due()===true&&W.pocket()==300&&W.get()==300&&c1.w.p===0,'new profile: due, topped up from 0 to RM3.00, flag cleared');
+ ok(W.due()===false&&W.pocket()==0&&W.get()==300,'second call: not due, nothing added');
+ const c2={name:'B',w:{c:110}};W=mkWallet(c2).W;ok(W.pocket()==190&&W.get()==300,'old profile with RM1.10: topped up to RM3.00 (+RM1.90), not 4.10');
+ const c3={name:'C',w:{c:420}};W=mkWallet(c3).W;ok(W.pocket()==0&&W.get()==420&&c3.w.p===0,'RM4.20 stays RM4.20 and the flag is cleared');
+ const c4={name:'D',w:{c:50,p:0}};W=mkWallet(c4).W;ok(W.due()===false&&W.pocket()==0&&W.get()==50,'restart spam (flag 0): no top-up');
+ W.setDue();ok(W.due()===true&&W.pocket()==250&&W.get()==300,'after a completed day (setDue): topped up again');
+ ok(W.msg(300)==='Duit saku ibu beri RM3.00 hari ini.'&&W.msg(190)==='Duit saku ibu beri RM3.00 hari ini. (+RM1.90)'&&W.msg(0)==='','message: full, partial (+RMx), none');
+ ok(mkWallet({name:'E',w:{c:'x',p:'y'}}).W.due()===true,'odd flag value reads as due');}
 /* ---- SPOT: pool, pick, respawn, keep ---- */
 const SPOT=new Function(SSRC+';return SPOT')();
 {ok(SPOT.CFG.gap==60&&SPOT.GAP()==60,'sampah gap is 60 s');
@@ -132,9 +144,9 @@ function runSrc(src,ret,pre){const D=deep();const g=new Proxy({},{has:(t,k)=>typ
  ok(!/s\.ty=\(s\.ty\+1\)%4;s\.k\.forEach/.test(ww+kk),'old in-place respawn removed');
  for(const p of ['world','kantin']){const h=rd(p+'.html');ok(/"js\/hud\.js", "js\/wallet\.js", "js\/spot\.js", /.test(h),p+'.html loads wallet.js and spot.js after hud.js')}
  ok(['padang','kelas'].every(p=>!/wallet\.js|spot\.js/.test(rd(p+'.html')))&&!/spot\.js/.test(rd('luar.html'))&&/wallet\.js/.test(rd('luar.html')),'padang and kelas load neither; luar loads wallet.js (Round 16 shop) but not spot.js');
- const sw=rd('sw.js');ok(sw.includes("CACHE='sr-r20d'")&&sw.includes("'js/wallet.js'")&&sw.includes("'js/spot.js'"),'sw.js: cache sr-r16 and both files pre-cached');
- ok(['sr-r20d'].every(c=>rd('tools/test-hud.js').includes(c)&&rd('tools/test-audio.js').includes(c)&&rd('tools/test-luar.js').includes(c)),'cache name bumped in test-hud, test-audio, test-luar');
+ const sw=rd('sw.js');ok(sw.includes("CACHE='sr-r27'")&&sw.includes("'js/wallet.js'")&&sw.includes("'js/spot.js'"),'sw.js: cache sr-r16 and both files pre-cached');
+ ok(['sr-r27'].every(c=>rd('tools/test-hud.js').includes(c)&&rd('tools/test-audio.js').includes(c)&&rd('tools/test-luar.js').includes(c)),'cache name bumped in test-hud, test-audio, test-luar');
  ok(/WALLET\.get\(\)/.test('')||true,'');
  ok(/Pusingan 15b/.test(rd('README.md'))&&/Pusingan 15a2/.test(rd('README.md'))&&/_backup_round15b/.test(rd('README.md')),'README has the Round 15b entry and keeps the old text');
- ok(fs.existsSync(path.join(__dirname,'..','_backup_round20a/js/world.js'))&&!fs.existsSync(path.join(__dirname,'..','_backup_round14b')),'backup _backup_round20a exists, oldest backup dropped');}
+ ok(fs.existsSync(path.join(__dirname,'..','_backup_round20d/js/world.js'))&&!fs.existsSync(path.join(__dirname,'..','_backup_round14b')),'backup _backup_round20d exists, oldest backup dropped');}
 console.log(fail?fail+' FAILED, '+pass+' passed':'all '+pass+' checks passed');process.exit(fail?1:0);

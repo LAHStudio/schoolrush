@@ -41,7 +41,7 @@ const FZ=-19;[[-35,-3],[3,35]].forEach(a=>{const cx=(a[0]+a[1])/2,w=a[1]-a[0];co
 [-3.2,3.2].forEach(x=>{bxm(.6,2.6,.6,'#c9553a',x,1.3,FZ,true,true)});
 /* ---- guard post and the guard ---- */
 bxm(2.6,.2,2.6,'#8a8f9a',6.2,2.9,-20.6,false);bxm(2.4,2.8,2.4,'#e7ecf2',6.2,1.4,-20.6,true,true);pn(1.1,.9,'#a9d8f0',5,1.6,-19.38,0);sgn(['PENGAWAL'],'#1c2f6b','#fff',2,.5,40,6.2,3.4,-19.38,0);
-function mkGuard(){const o={skin:SK[1],hc:'#14161d',h:1.28,w:1.08,mouth:1,es:1,bw:4,hs:'short',stache:true,o:{top:'#3a5a8c',bot:'#1c2236',shoe:'#111',ls:1}};return build(o)}
+function mkGuard(){return npc('guard','m')} /* Round 23: chibi security guard (cap, belt, shield badge) */
 const guard=mkGuard();guard.position.set(LUC.GUARD.x,0,LUC.GUARD.z);guard.rotation.y=0;sc.add(guard);const GDY={x:LUC.GUARD.x,z:LUC.GUARD.z,r:.5};DYNS.push(GDY);
 /* ---- Round 12d: chaser markers (red ring under the feet, "!" bubble, red triangle on the minimap, faster beep when close). Only the chaser has them. CHS = chase state (logic in luar-logic.js) */
 const CHS=LUL.chaseMake(LUC.GUARD.x,LUC.GUARD.z);
@@ -115,7 +115,7 @@ function stallEmpty(x,aw){bxm(5,1.1,1,'#d9d2c0',x,.55,12,true,true);bxm(5.2,.12,
  [1.5,2.2].forEach(y=>bxm(10.6,.1,.5,'#8a5a2a',x,y,13.7,false));
  for(let i=0;i<12;i++)[1.5,2.2].forEach((y,j)=>bxm(.55,.5,.4,cl[(i+j*2)%5],x-4.7+i*.85,y+.3,13.7,false));
  sgn(['KEDAI RUNCIT'],'#ffd23f','#7a2a1a',6.4,1,44,x,2.55,11.3,0)}
-const keeper=npc('penjual','m');keeper.position.set(LUC.RUN.x,0,13.2);keeper.rotation.y=Math.PI;sc.add(keeper);DYNS.push({x:LUC.RUN.x,z:13.2,r:.5});
+const keeper=npc('runcit','m');keeper.position.set(LUC.RUN.x,0,13.2);keeper.rotation.y=Math.PI;sc.add(keeper);DYNS.push({x:LUC.RUN.x,z:13.2,r:.5});
 LUC.BENCH.forEach(a=>bench(a[0],a[1],a[2])); /* 12c: pavement benches moved off the walkers' lanes (LUC.BENCH / LUC.WALK) */
 function picnic(x,z){const g=new T.Group(),a=(w,h,d,c,px,py,pz)=>{const m=new T.Mesh(new T.BoxGeometry(w,h,d),mat(c));m.position.set(px,py,pz);m.castShadow=true;g.add(m)};a(2.2,.1,1,'#a9713f',0,.85,0);[-.9,.9].forEach(o=>a(.12,.8,.8,'#6b4a2f',o,.45,0));[-.95,.95].forEach(o=>{a(2.2,.1,.4,'#a9713f',0,.5,o);[-.9,.9].forEach(q=>a(.1,.45,.1,'#6b4a2f',q,.25,o))});g.position.set(x,0,z);sc.add(g);colBox(x,z,1.2,1.4)}
 [[-22,-15.5],[22,-8.5],[12,-16]].forEach(a=>picnic(a[0],a[1]));
@@ -166,7 +166,7 @@ jz.onpointerup=jz.onpointercancel=()=>{jid=null;jb.style.display='none';jv.x=jv.
 $('bj').onpointerdown=()=>jmp=1;$('bj').onpointerup=$('bj').onpointercancel=()=>jmp=0;$('be').onpointerdown=()=>act();$('ex').onclick=()=>pause();
 let od=null;cv.onpointerdown=e=>{if(mode=='bus')skipBus();od=e;cv.setPointerCapture(e.pointerId)};cv.onpointermove=e=>{if(od&&e.pointerId==od.pointerId){cy-=(e.clientX-od.clientX)*.007;od=e;hold=1.5}};cv.onpointerup=cv.onpointercancel=()=>od=null;
 function fit(){ren.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}addEventListener('resize',fit);fit();
-let bt=0,bm;const bv=new T.Vector3();function say(t){const b=$('bub');b.textContent=t;b.style.display='block';bt=4;clearTimeout(bm);bm=setTimeout(()=>b.style.display='none',2800)}
+let bt=0,bm,bw=null;const bv=new T.Vector3();function say(t,w){const b=$('bub');b.textContent=t;b.style.display='block';bt=4;bw=w||null;clearTimeout(bm);bm=setTimeout(()=>b.style.display='none',2800)}
 /* ---- what is near (hint and E) ---- */
 function nearAct(){const n=LUL.near,home=STORY&&flow=='home';
  if(LUL.nearBtn(P))return['btn',SGS.st=='idle'?'Tekan butang lintasan':'Tunggu lampu hijau'];
@@ -178,22 +178,23 @@ function nearAct(){const n=LUL.near,home=STORY&&flow=='home';
  if(n(P,LUC.ICE,2.8))return['ice','Aiskrim'];
  if(n(P,{x:LUC.BUS.xs,z:7.6},4.5))return['stop','Perhentian bas'];
  return null}
-function act(){if(mode=='bus'){skipBus();return}if(halt||mode!='walk')return;const a=nearAct();if(!a)return;const nm=cur&&cur.name||'';
+function act(){if(mode=='bus'){skipBus();return}if(halt||mode!='walk')return;const a=nearAct();if(!a)return;window.lncEv&&lncEv('talk',a[0]);const nm=cur&&cur.name||'';
  if(a[0]=='btn'){if(LUL.sigPress(SGS)){tone(660,0,.1,'triangle',.12);say('Tunggu lampu hijau...')}else say(SGS.st=='walk'?'Lampu hijau! Melintas sekarang.':'Tunggu sebentar...');return}
  if(a[0]=='bus'){board();return}
  if(a[0]=='door'){if(STORY&&flow=='home'){say('Sekolah dah tamat. Jom naik bas!');return}enter();return}
- if(a[0]=='guard'){say(flow=='home'?'Hati-hati di jalan, '+nm+'. Jumpa esok!':STORY?'Selamat pagi, '+nm+'! Tengok kiri kanan bila melintas jalan.':'Selamat datang, '+nm+'. Jalan-jalan sekitar sekolah ya.');return}
- if(a[0]=='nasi'){say('Nasi lemak telur '+WALLET.fmt(WALLET.CFG.nasi)+' sebungkus!');BAG.openNasi();return}
- if(a[0]=='ice'){say('Aiskrim '+WALLET.fmt(WALLET.CFG.ice)+'! Vanila, coklat, jagung.');BAG.openIce();return}
- if(a[0]=='run'){say('Selamat datang ke kedai runcit!');BAG.openRuncit();return}
+ if(a[0]=='guard'){say(flow=='home'?'Hati-hati di jalan, '+nm+'. Jumpa esok!':STORY?'Selamat pagi, '+nm+'! Tengok kiri kanan bila melintas jalan.':'Selamat datang, '+nm+'. Jalan-jalan sekitar sekolah ya.',guard);return}
+ if(a[0]=='nasi'){say('Nasi lemak telur '+WALLET.fmt(WALLET.CFG.nasi)+' sebungkus!',seller);BAG.openNasi();return}
+ if(a[0]=='ice'){say('Aiskrim '+WALLET.fmt(WALLET.CFG.ice)+'! Vanila, coklat, jagung.',iceMan);BAG.openIce();return}
+ if(a[0]=='run'){say('Selamat datang ke kedai runcit!',keeper);BAG.openRuncit();return}
  if(a[0]=='stop'){say(STORY?(flow=='home'?'Tunggu bas sekolah sampai.':'Bas pulang datang selepas loceng balik.'):'Bas sekolah datang waktu balik (Mod Kelas).')}}
 function enter(){if(fin)return;fin=1;halt=true;SS.set('sk_in',1);SS.set('sk_arr',1);SS.del('sk_out');if(flow=='exit'&&STORY)SS.set('sk_ret',{exit:1}); /* 12d: back in the middle of the day, story.js restores the day */loading(()=>nav('world'))}
 /* Round 12d: the guard caught a pupil who left during lessons: back inside, no points lost, only the counter goes up (cur.caught, optional field) */
-function caught(){if(fin)return;fin=1;halt=true;cur.caught=(cur.caught||0)+1;save();SRA.whistle();say('Balik ke dalam! Waktu belajar!');toast('Balik ke dalam! Waktu belajar!',2400);SS.set('sk_in',1);SS.set('sk_arr',1);SS.del('sk_out');SS.set('sk_ret',{exit:1,caught:1});setTimeout(()=>loading(()=>nav('world')),1300)}
+function caught(){if(fin)return;fin=1;halt=true;cur.caught=(cur.caught||0)+1;save();SRA.whistle();say('Balik ke dalam! Waktu belajar!',guard);toast('Balik ke dalam! Waktu belajar!',2400);SS.set('sk_in',1);SS.set('sk_arr',1);SS.del('sk_out');SS.set('sk_ret',{exit:1,caught:1});setTimeout(()=>loading(()=>nav('world')),1300)}
 function board(){if(mode!='walk')return;mode='board';halt=true;pm.visible=false;boardT=0;tone(520,0,.1,'triangle',.12)}
 function skipBus(){if(flow!='arrive'||mode!='bus')return;LUL.busSkip(bus);spawnOut()}
 function spawnOut(){P.x=LUC.DOOR.x;P.z=LUC.DOOR.z;P.y=0;P.vy=0;P.f=Math.PI;P.gy=0;cy=0;cp.x=P.x;cp.z=P.z;pm.visible=true;mode='walk';halt=false;document.body.classList.remove('mn');gFrom={p:cam.position.toArray(),l:lastLook.slice()};gt=0;
- bus.st='stop';$('hint').style.display='none';toast(STORY?'Selamat datang ke sekolah! Melintas guna lintasan pejalan kaki.':'Jom jalan-jalan di luar sekolah.',3200)}
+ bus.st='stop';$('hint').style.display='none';toast(STORY?'Selamat datang ke sekolah! Melintas guna lintasan pejalan kaki.':'Jom jalan-jalan di luar sekolah.',3200);
+ if(STORY&&flow=='arrive'&&typeof WALLET!='undefined'){const a=WALLET.pocket();if(a)setTimeout(()=>toast(WALLET.msg(a),3000),3300)}} /* Round 22: Mod Kelas pocket money at the bus arrival (floor RM3.00, once per completed day) */
 function bump(c){tone(380,0,.16,'square',.14);tone(300,.2,.16,'square',.14);c.v=0;P.z=LUL.kerbZ(P);P.y=0;P.vy=0;slowT=SLOW.t;toast('Aduh! Tengok kiri kanan sebelum melintas.',2800);say('Tengok kiri kanan!')}
 /* ---- camera ---- */
 const ASP=()=>cam.aspect<1?1.25:1;
@@ -245,7 +246,7 @@ function loop(ts){requestAnimationFrame(loop);let dt=Math.min((ts-last)/1000||0,
  STU.forEach((m,i)=>anim(m,t+i,0));WLK.forEach(w=>{LUL.walkTick(w,dt,(x,z)=>hitS(x,z,.4)||DYNS.some(d=>Math.hypot(x-d.x,z-d.z)<.4+d.r),mode=='walk'?P:null);w.m.position.set(w.x,0,w.z);w.m.rotation.y=w.dir>0?Math.PI/2:-Math.PI/2;anim(w.m,t,1)});
  if(CHS.st=='wait'||CHS.st=='run'){if(mode=='walk'&&!halt&&dt>0){const ev=LUL.chaseTick(CHS,dt,P,chFree);if(LUL.chaseBeep(CHS,dt,Math.hypot(P.x-CHS.x,P.z-CHS.z)))tone(740,0,.07,'square',.07);if(ev=='caught')caught()}
   guard.position.set(CHS.x,0,CHS.z);GDY.x=CHS.x;GDY.z=CHS.z;guard.rotation.y=CHS.f;anim(guard,t,CHS.mv);chRing.visible=true;chRing.position.set(CHS.x,.06,CHS.z);chRing.scale.setScalar(1+.12*Math.sin(t*8));
-  bv.set(CHS.x,2.4,CHS.z).project(cam);if(bv.z<1){chBub.style.display='block';chBub.style.left=(bv.x*.5+.5)*cv.clientWidth+'px';chBub.style.top=(-bv.y*.5+.5)*cv.clientHeight+'px'}else chBub.style.display='none'}else{chRing.visible=false;chBub.style.display='none'}
+  bv.set(CHS.x,headY(guard)+.14,CHS.z).project(cam);if(bv.z<1){chBub.style.display='block';chBub.style.left=(bv.x*.5+.5)*cv.clientWidth+'px';chBub.style.top=(-bv.y*.5+.5)*cv.clientHeight+'px'}else chBub.style.display='none'}else{chRing.visible=false;chBub.style.display='none'}
  BG.visible=bus.st!='idle';BG.position.x=bus.x;busDoor.visible=!bus.door;busOpen.visible=bus.door;
  if(mode=='board'){boardT+=dt;if(boardT>.9&&bus.st=='stop')LUL.busLeave(bus);if(boardT>.9&&bus.x<-30&&!fin){fin=1;SS.set('sk_ret',{home:1});SS.set('sk_in',1);SS.del('sk_out');loading(()=>nav('world'))}}
  /* camera */
@@ -254,9 +255,9 @@ function loop(ts){requestAnimationFrame(loop);let dt=Math.min((ts-last)/1000||0,
  /* HUD */
  iceMan.rotation.y=Math.atan2(P.x-LUC.ICE.x,P.z-LUC.ICE.z);seller.rotation.y=Math.atan2(P.x-LUC.NASI.x,P.z-13.2);keeper.rotation.y=Math.atan2(P.x-LUC.RUN.x,P.z-13.2);if(CHS.st=='off'){guard.rotation.y=Math.atan2(P.x-LUC.GUARD.x,P.z-LUC.GUARD.z);anim(guard,t,0)}[iceMan,seller,keeper].forEach(m=>anim(m,t,0));
  const h=$('hint');
- if(mode=='walk'){bt-=dt;const cw=cv.clientWidth,ch=cv.clientHeight,bb=$('bub');if(bb.style.display=='block'){bv.set(P.x,P.y+P.gy+2.3,P.z).project(cam);bb.style.left=(bv.x*.5+.5)*cw+'px';bb.style.top=(-bv.y*.5+.5)*ch+'px'}
+ if(mode=='walk'){bt-=dt;const cw=cv.clientWidth,ch=cv.clientHeight,bb=$('bub');if(bb.style.display=='block'){(bw?bv.set(bw.position.x,bw.position.y+headY(bw)+.14,bw.position.z):bv.set(P.x,P.y+P.gy+headY(pm)+.14,P.z)).project(cam);bb.style.left=(bv.x*.5+.5)*cw+'px';bb.style.top=(-bv.y*.5+.5)*ch+'px'}
   const a=nearAct(),pe=document.body.classList.contains('touch')?'Tekan E':'E';if(halt)h.style.display='none';else if(a){h.textContent=pe+' · '+a[1];h.style.display='block'}else h.style.display='none';
-  if(!greet&&LUL.near(P,LUC.GUARD,3.6)){greet=1;if(flow=='home')say('Hati-hati di jalan, '+(cur&&cur.name||'')+'!');else say('Selamat pagi, '+(cur&&cur.name||'')+'!')}
+  if(!greet&&LUL.near(P,LUC.GUARD,3.6)){greet=1;if(flow=='home')say('Hati-hati di jalan, '+(cur&&cur.name||'')+'!',guard);else say('Selamat pagi, '+(cur&&cur.name||'')+'!',guard)}
   if(wasSlow&&slowT<=0)toast('Kaki dah okey semula.',1800);wasSlow=slowT>0}
  else if(mode=='bus'){h.textContent='Tekan untuk langkau';h.style.display='block'}else h.style.display='none';
  drawMM();ren.render(sc,cam)}requestAnimationFrame(loop);
@@ -272,6 +273,6 @@ function boot(){const k=LS.get('sk_cur',null);if(!k||!PF[k]){SS.del('sk_day');SS
  loading(()=>{document.body.classList.remove('mn');
   if(flow=='home'){P.x=0;P.z=-23;P.f=0;P.y=0;P.gy=0;cy=Math.PI;cp.x=P.x;cp.z=P.z;mode='walk';halt=false;callT=BU.callIn;toast('Loceng balik! Pergi ke perhentian bas di seberang jalan.',3600)}
   else if(flow=='exit'){P.x=0;P.z=-23;P.f=0;P.y=0;P.gy=0;cy=Math.PI;cp.x=P.x;cp.z=P.z;mode='walk';halt=false;greet=1;WCAR.hold=false;WCAR.wait=1;WCAR.on=false; /* 12d: came out of the school door: foot of the stairs, no bus scene */
-   if(STORY&&!(day&&day.free)){LUL.chaseStart(CHS);SRA.whistle();say('Hoi! Masuk balik, waktu belajar!');toast('Kamu keluar waktu sekolah! Pengawal dah nampak kamu.',3400)}else toast(STORY?'Sekolah dah tamat. Jalan-jalan di luar!':'Jom jalan-jalan di luar sekolah.',2600)}
+   if(STORY&&!(day&&day.free)){LUL.chaseStart(CHS);SRA.whistle();say('Hoi! Masuk balik, waktu belajar!',guard);toast('Kamu keluar waktu sekolah! Pengawal dah nampak kamu.',3400)}else toast(STORY?'Sekolah dah tamat. Jalan-jalan di luar!':'Jom jalan-jalan di luar sekolah.',2600)}
   else{mode='bus';halt=true;pm.visible=false;LUL.busCall(bus);toast(STORY?'Bas sekolah dah sampai!':'Bas sekolah dah sampai. Selamat pagi!',2600)}})}
 boot();

@@ -64,7 +64,7 @@ const LOCK=(()=>{
  function bar(){const i=document.querySelector('#lkxp .lkxbar i');if(i&&puz)i.style.width=Math.max(0,puz.t/puz.g.tm*100)+'%'}
  function choose(v){if(!puz)return;const p=puz;p.pick[p.i]=v;if(v!==p.g.ans[p.i]){finish(false);return}p.i++;if(p.i>=p.g.bl.length)finish(true);else draw()}
  function finish(ok){const id=puz.id;puz=null;const e=document.getElementById('lkxp');if(e)e.style.display='none';halt=false;
-  const s=load();if(!s.t0)s.t0=now();s.o[id]=1;save(s);paint(s);
+  const s=load();if(!s.t0)s.t0=now();s.o[id]=1;save(s);paint(s);window.lncEv&&lncEv('lock');
   if(ok)reward(lootOf(s.map[id]));else{say('Alamak, salah!');toast('Loker tersangkut! Salah jawapan.',2600)}
   sw=CFG.delay;sp=ok?CFG.spd:CFG.spdBad}
  /* ---- what is inside ---- */
@@ -86,7 +86,7 @@ const LOCK=(()=>{
  function runPf(dt,t){const o=pf.o;pf.t+=dt;if(pf.t<CFG.grace){o.mv=0;anim(o.m,t,0);pfMark(t,o,CFG.pf);return}
   const dm=pfGo(o,dt,pf.sp);o.m.position.set(o.x,0,o.z);o.m.rotation.y=o.f;anim(o.m,t,o.mv);pfMark(t,o,CFG.pf);
   pf.b-=dt;if(pf.b<=0){pf.b=Math.max(.25,Math.min(1.2,.25+dm*.045));tone(740,0,.07,'square',.07)}
-  if(dm<CFG.catchR)caught();else if(pf.t>=CFG.run){release();toast('Pengawas berhenti mengejar. Fuh, lepas!',2600)}}
+  if(dm<CFG.catchR)caught();else if(pf.t>=CFG.run){release();window.lncEv&&lncEv('escape');toast('Pengawas berhenti mengejar. Fuh, lepas!',2600)}}
  /* ---- warning when the prefect comes: flashing triangle on screen, 2 s ---- */
  function warn(){css();let e=document.getElementById('lkxw');if(!e){e=document.createElement('div');e.id='lkxw';e.innerHTML='<i>\u26A0</i><span>PENGAWAS!</span>';document.body.appendChild(e)}e.style.display='flex';wT=CFG.warn}
  /* ---- KANTOI!: freeze, red overlay, fade to black, move you while black, fade in, then the rotan scene ---- */

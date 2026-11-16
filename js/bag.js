@@ -20,13 +20,13 @@ const BAG=(()=>{
   epal:{n:'Epal Fuji',i:'\uD83C\uDF4E',k:'inv',t:10,d:'Halimunan 10 saat, boleh tembus semua benda kecuali dinding'}};
  const ORDER=['nasi','gula','pisang','iso','epal'],RUNCIT=['gula','pisang','iso','epal'],FLAV=[['vanila','Vanila'],['coklat','Coklat'],['jagung','Jagung']];
  const ICE_I='\uD83C\uDF66',SNAIL='\uD83D\uDC22';
- const COS={cap:{n:'Topi',i:'\uD83E\uDDE2',d:'Topi merah untuk kepala'},eye:{n:'Penutup Mata',i:'\uD83C\uDFF4\u200D\u2620\uFE0F',d:'Penutup mata hitam'},beard:{n:'Janggut',i:'\uD83E\uDDD4',d:'Janggut ikut warna rambut'},mos:{n:'Misai',i:'\uD83E\uDD78',d:'Misai ikut warna rambut'}},COSORD=['cap','eye','beard','mos'];
+ const COS={cap:{n:'Topi',i:'\uD83E\uDDE2',d:'Topi merah untuk kepala'},eye:{n:'Penutup Mata',i:'\uD83C\uDFF4\u200D\u2620\uFE0F',d:'Penutup mata hitam'},beard:{n:'Janggut',i:'\uD83E\uDDD4',d:'Janggut ikut warna rambut'},mos:{n:'Misai',i:'\uD83E\uDD78',d:'Misai ikut warna rambut'},vest:{n:'Rompi Tukang Cuci',i:'\uD83E\uDDBA',d:'Rompi jingga tukang cuci. Hadiah tandas lelaki.'}},COSORD=['cap','eye','beard','mos'],COSALL=COSORD.concat(['vest']); /* Round 20e: COSORD = what the shop sells; COSALL also has the vest (a reward of the locked boys cubicle, js/jkey.js, never sold) */
  const C=()=>typeof cur!=='undefined'?cur:null,num=v=>Math.max(0,+v||0);
  const W=()=>typeof WALLET!=='undefined'?WALLET:null;
  const fxr=()=>{const c=C();return c&&c.fx&&typeof c.fx=='object'?c.fx:null};          /* read only, never creates */
  const fxw=()=>{const c=C();if(!c)return null;if(!c.fx||typeof c.fx!='object')c.fx={};return c.fx};
  const stw=()=>{const c=C();if(!c)return null;if(!c.inv||typeof c.inv!='object')c.inv={};return c.inv};
- const B={IT,ORDER,RUNCIT,MAX,COS,COSORD,world:0,onCure:null,onEat:null};let lastSave=0;
+ const B={IT,ORDER,RUNCIT,MAX,COS,COSORD,COSALL,world:0,onCure:null,onEat:null};let lastSave=0;
  const persist=()=>{lastSave=Date.now();if(typeof save=='function'&&C())save()};
  /* ---- bag ---- */
  B.cnt=k=>{const c=C(),n=c&&c.inv&&typeof c.inv=='object'?Math.floor(+c.inv[k]||0):0;return Math.max(0,Math.min(MAX,n))};
@@ -72,7 +72,10 @@ const BAG=(()=>{
  const cw=()=>{const c=C();if(!c)return null;if(!c.cos||typeof c.cos!='object')c.cos={};if(!c.cos.own||typeof c.cos.own!='object')c.cos.own={};if(!c.cos.on||typeof c.cos.on!='object')c.cos.on={};return c.cos};
  B.owns=k=>{const s=cr();return !!(COS[k]&&s&&s.own&&typeof s.own=='object'&&s.own[k])};
  B.isOn=k=>{if(!B.owns(k))return false;const s=cr();return !!(s.on&&typeof s.on=='object'&&s.on[k])};
- B.worn=()=>COSORD.filter(B.isOn);
+ B.worn=()=>COSALL.filter(B.isOn);
+ /* a reward (not bought): owned for good, true only the first time. Money is never involved */
+ B.grantCos=k=>{if(!COS[k]||!cw())return false;if(B.owns(k))return false;cw().own[k]=1;persist();return true};
+ if(typeof window!=='undefined'){window.bagGrantCos=B.grantCos;window.bagOwnsCos=B.owns}   /* js/jkey.js grants the vest through these (the name BAG stays in the files that already use it) */
  /* buy once: 'ok' | 'own' | 'poor' | 'bad'. Money is only taken when it is not owned yet. */
  B.buyCos=k=>{const w=W();if(!w||!COS[k]||!B.price(k)||!cw())return 'bad';if(B.owns(k))return 'own';if(!w.spend(B.price(k)))return 'poor';cw().own[k]=1;persist();return 'ok'};
  /* the page rebuilds its own player (mkP) and keeps the position and facing; the HUD portrait is redrawn */
@@ -104,7 +107,7 @@ const BAG=(()=>{
  B.isOpen=()=>!!panel;
  B.open=()=>{if(panel){B.close();return}
   mount(()=>({title:'Beg Sekolah',empty:'Beg kosong. Beli di Kedai Runcit!',rows:ORDER.filter(k=>B.cnt(k)>0).map(k=>({i:IT[k].i,n:IT[k].n,d:IT[k].d,q:'x'+B.cnt(k),b:'Guna',go:()=>{const r=B.use(k);if(r.ok&&k=='nasi')B.pop(IT.nasi.i);return{msg:r.msg,close:r.ok&&k!='nasi'}}}))
-   .concat(COSORD.some(B.owns)?[{h:'Barang Gaya'}].concat(COSORD.filter(B.owns).map(k=>({i:COS[k].i,n:COS[k].n,d:B.isOn(k)?'Sedang dipakai':'Belum dipakai',q:B.isOn(k)?'\u2713':'',b:B.isOn(k)?'Tanggal':'Pakai',go:()=>({msg:(B.isOn(k)?B.doff(k):B.wear(k)).msg})}))):[]).concat(typeof JK!=='undefined'&&JK.rows?JK.rows():[])}))}; /* Round 20a: quest rows from js/jkey.js (world page only) */
+   .concat(COSALL.some(B.owns)?[{h:'Barang Gaya'}].concat(COSALL.filter(B.owns).map(k=>({i:COS[k].i,n:COS[k].n,d:B.isOn(k)?'Sedang dipakai':'Belum dipakai',q:B.isOn(k)?'\u2713':'',b:B.isOn(k)?'Tanggal':'Pakai',go:()=>({msg:(B.isOn(k)?B.doff(k):B.wear(k)).msg})}))):[]).concat(typeof JK!=='undefined'&&JK.rows?JK.rows():[])}))}; /* Round 20a: quest rows from js/jkey.js (world page only) */
  B.openRuncit=()=>mount(()=>({title:'Kedai Runcit',money:1,rows:RUNCIT.map(k=>({i:IT[k].i,n:IT[k].n,d:IT[k].d+' \u00B7 dalam beg: '+B.cnt(k),q:W()?W().fmt(B.price(k)):'',b:'Beli',go:()=>{const r=B.buy(k);return{msg:r=='ok'?'Terima kasih! '+IT[k].n+' masuk beg.':r=='poor'?'Tak cukup duit.':r=='full'?'Beg penuh (maksimum '+MAX+').':'Tak boleh beli.'}}}))
   .concat([{h:'Barang Gaya'}],COSORD.map(k=>({i:COS[k].i,n:COS[k].n,d:COS[k].d+(B.owns(k)?' \u00B7 sudah dibeli, pakai dari beg':''),q:B.owns(k)?'Dimiliki':(W()?W().fmt(B.price(k)):''),b:B.owns(k)?'Dimiliki':'Beli',off:B.owns(k),go:()=>{const r=B.buyCos(k);return{msg:r=='ok'?'Terima kasih! '+COS[k].n+' masuk beg. Pakai dari beg.':r=='poor'?'Tak cukup duit.':r=='own'?'Sudah ada.':'Tak boleh beli.'}}})))}));
  B.openNasi=()=>mount(()=>({title:'Nasi Lemak',money:1,rows:[{i:IT.nasi.i,n:IT.nasi.n,d:'Simpan dalam beg. Makan untuk buang kesan perlahan. Dalam beg: '+B.cnt('nasi'),q:W()?W().fmt(B.price('nasi')):'',b:'Beli',go:()=>{const r=B.buy('nasi');return{msg:r=='ok'?'Terima kasih! Nasi lemak masuk beg.':r=='poor'?'Tak cukup duit.':r=='full'?'Beg penuh (maksimum '+MAX+').':'Tak boleh beli.'}}}]}));

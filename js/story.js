@@ -61,12 +61,12 @@ let pfM=[],pfV=null,pfBt=0;
 function pfOn(t,c,i){let o=pfM[i];if(!o){const r=new T.Mesh(new T.RingGeometry(.55,.8,28),new T.MeshBasicMaterial({color:'#e02424',side:T.DoubleSide,transparent:true,opacity:.85}));r.rotation.x=-Math.PI/2;sc.add(r);
   const b=document.createElement('div');b.id='pfb'+(i||'');b.textContent='!';b.style.cssText='position:fixed;z-index:8;pointer-events:none;display:none;transform:translate(-50%,-100%);font:900 2.2em Fredoka,sans-serif;color:#fff;background:#e02424;border:3px solid #fff;border-radius:50%;width:1.3em;height:1.3em;line-height:1.25em;text-align:center;box-shadow:0 2px 6px #0006';document.body.appendChild(b);pfM[i]=o={r,b};if(!pfV)pfV=new T.Vector3()}
  o.r.visible=true;o.r.position.set(c.x,.06,c.z);o.r.scale.setScalar(1+.12*Math.sin(t*8+i));
- pfV.set(c.x,2.4,c.z).project(cam);if(pfV.z<1){o.b.style.display='block';o.b.style.left=(pfV.x*.5+.5)*cv.clientWidth+'px';o.b.style.top=(-pfV.y*.5+.5)*cv.clientHeight+'px'}else o.b.style.display='none'}
+ pfV.set(c.x,headY(c.m)+.14,c.z).project(cam);if(pfV.z<1){o.b.style.display='block';o.b.style.left=(pfV.x*.5+.5)*cv.clientWidth+'px';o.b.style.top=(-pfV.y*.5+.5)*cv.clientHeight+'px'}else o.b.style.display='none'}
 function pfOff(){pfM.forEach(o=>{o.r.visible=false;o.b.style.display='none'})}
 /* ---- Round 15d: 9:50 reminder. Patrol prefects walk near the player (calm chase, no catching, no beep) and each shows a white speech bubble ---- */
 let syM=[],syV=null;
 function pfSay(c,i){let b=syM[i];if(!b){b=document.createElement('div');b.id='pfsay'+i;b.textContent='waktu rehat nak habis, cepat ke kantin!';b.style.cssText='position:fixed;z-index:8;pointer-events:none;display:none;transform:translate(-50%,-100%);font:600 .95em Fredoka,sans-serif;color:#111;background:#fff;border:2px solid #111;border-radius:.7em;padding:.3em .6em;max-width:min(60vw,16em);text-align:center;line-height:1.25;box-shadow:0 2px 6px #0006';document.body.appendChild(b);syM[i]=b;if(!syV)syV=new T.Vector3()}
- syV.set(c.x,2.6,c.z).project(cam);if(syV.z<1){b.style.display='block';const hw=(b.offsetWidth||0)/2+4;b.style.left=Math.max(hw,Math.min(cv.clientWidth-hw,(syV.x*.5+.5)*cv.clientWidth))+'px';b.style.top=(-syV.y*.5+.5)*cv.clientHeight+'px'}else b.style.display='none'}
+ syV.set(c.x,headY(c.m)+.14,c.z).project(cam);if(syV.z<1){b.style.display='block';const hw=(b.offsetWidth||0)/2+4;b.style.left=Math.max(hw,Math.min(cv.clientWidth-hw,(syV.x*.5+.5)*cv.clientWidth))+'px';b.style.top=(-syV.y*.5+.5)*cv.clientHeight+'px'}else b.style.display='none'}
 function sayOff(){syM.forEach(b=>b.style.display='none')}
 function startRemind(){rm=1;setNav(true);ns.forEach(o=>{if(o.role!='pengawas'||o.ch)return;o.ch=1;o.hid=0;o.m.visible=true;o.mv=0;o.d=0;ex.push(o)});tone(520,0,.18,'sine',.08);toast('Waktu rehat nak habis! Cepat ke Kantin.',2600)}
 function autoKantin(){score=Math.max(0,score-CFG.RPEN);toast('Waktu rehat dah habis! Pengawas hantar kamu ke Kantin.',3000);enterRoom(5,false,true)}
@@ -122,7 +122,7 @@ function endWalk(){st='endwalk';ew=CFG.ENDWALK;clk=CFG.BALIK-ew*CFG.RATE;setNav(
 function ringBalik(){st='balik';bd2=4.6;clk=CFG.BALIK;ringT=4.6;bellSound(5);try{navigator.vibrate&&navigator.vibrate([400,150,400,150,400])}catch(e){}toast('Ringg!!! Loceng balik! Jalan perlahan ke pintu keluar ya.',4200);pills()}
 /* Round 12: after the balik bell the day goes outside (luar.html): walk to the bus stop and board; storyBoot then shows the end card (ret.home) */
 function goHome(){st='done';SS.set('sk_day',{order,n,score,ok,lt,gr});SS.set('sk_out','home');$('stm').hidden=true;$('bl').className='';ringT=0;loading(()=>nav('luar'))}
-function endDay(){st='done';clk=CFG.BALIK;$('stm').hidden=true;$('bl').className='';ringT=0;drawClock();if(score>(cur.sb||0))cur.sb=score;cur.save=null;save(); /* Round 9f: day finished, so no saved day to continue */
+function endDay(){st='done';clk=CFG.BALIK;$('stm').hidden=true;$('bl').className='';ringT=0;drawClock();if(score>(cur.sb||0))cur.sb=score;cur.save=null;save();WALLET.setDue(); /* Round 9f: day finished, so no saved day to continue. Round 22: pocket money is due again */
  card('Sekolah tamat!',[['Jam 1:00 tengah hari. Loceng balik dah berbunyi!'],['Skor: '+score,1],['Tepat masa: '+ok+' · Lewat: '+lt],['Skor terbaik: '+(cur.sb||0)]],[['Main lagi',()=>{SS.del('sk_in');location.reload()}],['Sambung jalan-jalan',freeRoam],['Halaman utama',()=>nav('index')]]);
  room().insertBefore(report(),room().querySelector('.rk'))}
 /* Round 7: Kad Laporan on the end card. Classes with no real room yet show a dash */
@@ -171,9 +171,9 @@ window.storyBoot=function(){const day=SS.get('sk_day'),ret=SS.get('sk_ret'),arr=
  if(cur.save){cur.save=null;save()} /* unreadable saved day: drop it */
  freshDay()};
 function freshDay(){
- const tp=WALLET.topUp(WALLET.CFG.pocket); /* Round 15b: new school day, wallet topped up to the daily pocket money, never above */
+ const tp=WALLET.pocket(); /* Round 15b/22: pocket money = topped up to RM3.00, never above, only if due (the bus arrival in luar.js normally gave it already) */
  order=plan();n=0;score=ok=lt=0;st='off';$('scr').hidden=false;$('ck').hidden=false;$('bl').hidden=false;clk=bellAt(0)-2;pills();$('stm').hidden=true;drawClock();
- card('Hari sekolah bermula!',[['Lihat jam dan loceng. Loceng berbunyi dahulu.'],['Sampai ke kelas dalam 30 saat.'],['Pukul 9:30 ialah Waktu Rehat di Kantin.'],['Lewat? Pengawas akan kejar kamu!']],[['Jom!',()=>{closeCard();document.body.classList.remove('mn');halt=false;sched(true);if(tp)toast('Duit saku hari ini: '+WALLET.fmt(WALLET.CFG.pocket),2600)}]])}
+ card('Hari sekolah bermula!',[['Lihat jam dan loceng. Loceng berbunyi dahulu.'],['Sampai ke kelas dalam 30 saat.'],['Pukul 9:30 ialah Waktu Rehat di Kantin.'],['Lewat? Pengawas akan kejar kamu!']],[['Jom!',()=>{closeCard();document.body.classList.remove('mn');halt=false;sched(true);if(tp)toast(WALLET.msg(tp),2600)}]])}
 window.storyDoor=function(d){const i=DR.indexOf(d);
  if(MODE!='story'){if(RP[i]){if(RS[i])SS.set('sk_kelas',RS[i]);savePos();SS.set('sk_go',1);loading(()=>nav(RP[i]));return true}return false} /* Mod Jalan-jalan: Matematik, English, Padang and Kantin are real rooms so far */
  if(st=='rehat'){if(i==5)enterRoom(5,false);else say('Waktu rehat! Pergi ke Kantin.');return true}

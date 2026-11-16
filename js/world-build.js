@@ -65,7 +65,7 @@ const m=new T.Mesh(new T.PlaneGeometry(2.2,1.1),new T.MeshBasicMaterial({map:new
 flag(X(292),2.8,Z(538)-.04,Math.PI);tx(['RUKUN NEGARA','Kepercayaan kepada Tuhan','Kesetiaan kepada Raja dan Negara','Keluhuran Perlembagaan','Kedaulatan Undang-undang','Kesopanan dan Kesusilaan'],'#1c2f6b','#ffffff',2,1.5,12,X(380),2.75,Z(538)-.04,Math.PI);
 const ez=Z(538)-.06,ex=X(336);pn(2.9,3.1,'#f5f5f5',ex,1.55,ez,Math.PI);[-.68,.68].forEach(o=>{pn(1.25,2.8,'#7a5236',ex+o,1.4,ez-.02,Math.PI);pn(.8,1.1,'#a9d8f0',ex+o,1.95,ez-.04,Math.PI);pn(.08,.4,'#e8c53a',ex+o*.12,1.35,ez-.04,Math.PI)});tx(['PINTU MASUK'],'#1c2f6b','#ffffff',2.4,.6,34,ex,3.55,ez-.04,Math.PI);
 function bench(px,py,nx,nz,len,k){const[x,z]=WP(px,py,nx,nz,.35),w=nx?.5:len,d=nx?len:.5,tx_=Math.abs(nz),tz=Math.abs(nx);box3(x,z,w,d,.08,'#a9744a',.42);[-1,1].forEach(s=>box3(x+tx_*s*(len/2-.2),z+tz*s*(len/2-.2),.12,.12,.42,'#5a5f69'));
-for(let i=0;i<k;i++){const o=(i-(k-1)/2)*.9,m=npc('murid');m.position.set(x+tx_*o+nx*.05,.04,z+tz*o+nz*.05);m.rotation.y=Math.atan2(nx,nz);m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m)}
+for(let i=0;i<k;i++){const o=(i-(k-1)/2)*.9,m=npc('murid');m.position.set(x+tx_*o+nx*.05,seatY(m),z+tz*o+nz*.05);m.rotation.y=Math.atan2(nx,nz);m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m)}
 cols.push({x0:x-(nx?.5:len/2),x1:x+(nx?.5:len/2),z0:z-(nx?len/2:.5),z1:z+(nx?len/2:.5)})}
 bench(100,440,1,0,2.2,2);bench(580,250,-1,0,2.2,1);bench(215,362,0,-1,2.2,2);
 function rb(px,py,nx,nz,c){const[x,z]=WP(px,py,nx,nz,.4),b=new T.Mesh(new T.CylinderGeometry(.27,.22,.7,6),mat(c));b.position.set(x,.35,z);b.castShadow=true;sc.add(b);box3(x,z,.6,.6,.08,'#222222',.7);solid(x,z,.28);BN.push({x:x+nx*.7,z:z+nz*.7,bx:x,bz:z,k:{'#3b7fd0':0,'#e8923a':1,'#7a5236':2}[c]})}
@@ -85,7 +85,7 @@ else if(ty==1){a(new T.CylinderGeometry(.07,.07,.3,8),'#ffe0b8',0,.15,0);a(new T
 else if(ty==2){a(new T.CylinderGeometry(.075,.075,.2,8),'#7a4a24',0,.1,0);a(new T.CylinderGeometry(.035,.035,.14,8),'#7a4a24',0,.27,0);a(new T.CylinderGeometry(.045,.045,.03,8),'#c9a227',0,.36,0)}
 else{a(new T.BoxGeometry(.14,.07,.07),'#ff5fa2',0,.05,0);a(new T.ConeGeometry(.05,.08,4),'#ffd23f',.11,.05,0).rotation.z=-Math.PI/2;a(new T.ConeGeometry(.05,.08,4),'#ffd23f',-.11,.05,0).rotation.z=Math.PI/2}
 return g}
-const NM=['Kertas','Botol plastik','Botol kaca','Bungkus gula-gula'],HM=[0,1,2,3].map(t=>{const g=mkItem(t);g.visible=false;g.scale.setScalar(1.15);g.position.set(0,-.42,.12);return g});
+const NM=['Kertas','Botol plastik','Botol kaca','Bungkus gula-gula'],HM=[0,1,2,3].map(t=>{const g=mkItem(t);g.visible=false;g.scale.setScalar(.96);g.position.set(0,-.37,.1);return g});
 const SM=[[340,400],[230,168],[230,344],[450,520],[118,450],[330,200]].map((a,i)=>{const x=X(a[0]),z=Z(a[1]),k=[0,1,2,3].map(t=>{const g=mkItem(t),l=t==1||t==2;g.scale.setScalar(1.5);g.position.set(x,l?.11:0,z);g.rotation.set(0,rnd(0,6),l?Math.PI/2:0);g.visible=t==i%4;sc.add(g);return g});return{x,z,ty:i%4,cd:0,k}});
 [['KERTAS','#3b7fd0',466],['PLASTIK','#e8923a',474],['KACA','#7a5236',482]].forEach(a=>tx([a[0]],a[1],'#ffffff',.8,.3,22,X(354)-.1,1.15,Z(a[2]),-Math.PI/2));
 [['KERTAS','#3b7fd0',324],['PLASTIK','#e8923a',332],['KACA','#7a5236',340],['BIASA','#4d6a58',348]].forEach(a=>tx([a[0]],a[1],'#ffffff',.8,.3,22,X(a[2]),1.15,Z(150)+.1,0)); /* Round 19i: signs above the four bins on the far wall (facing south) */
@@ -118,7 +118,7 @@ const PJX=X(387),PJZ=Z(502),CNS=[PJX,PJZ+.9];let TCH=null,CANE=null;
 (()=>{const mt=new T.Mesh(new T.PlaneGeometry(3.4,1.3),mat('#a33b4b'));mt.rotation.x=-Math.PI/2;mt.position.set(PJX,.025,PJZ+1.25);mt.receiveShadow=true;sc.add(mt);
 const mi=new T.Mesh(new T.PlaneGeometry(3.0,.9),mat('#d9a441'));mi.rotation.x=-Math.PI/2;mi.position.set(PJX,.03,PJZ+1.25);sc.add(mi);
 const g=npc('guru','m');g.position.set(X(412),0,PJZ+.9);g.rotation.y=0;sc.add(g);solid(X(412),PJZ+.9,.35);TCH=g;
-CANE=new T.Mesh(new T.CylinderGeometry(.025,.025,.6,6),mat('#7a4a21'));CANE.position.set(0,-.72,.04); /* along the arm, so it swings down with the arm */CANE.visible=false;g.userData.arms[1].add(CANE)})();
+CANE=new T.Mesh(new T.CylinderGeometry(.025,.025,.6,6),mat('#7a4a21'));CANE.position.set(0,-.64,.04); /* along the arm, so it swings down with the arm */CANE.visible=false;g.userData.arms[1].add(CANE)})();
 const hit=(x,z,r)=>cols.some(c=>x+r>c.x0&&x-r<c.x1&&z+r>c.z0&&z-r<c.z1);
 const GC=.5,GX=-36,GZ=-38,GW=144,GH=128,bk=new Uint8Array(GW*GH),N8=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
 for(let j=0;j<GH;j++)for(let i=0;i<GW;i++)bk[j*GW+i]=hit(GX+(i+.5)*GC,GZ+(j+.5)*GC,.3)?1:0;

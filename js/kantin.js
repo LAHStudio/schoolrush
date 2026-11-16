@@ -53,7 +53,7 @@ FG.front.push(poster(5,-6.2,2.35,RZ1-.03,Math.PI,1.5,1.9),poster(4,RX*.5,1.95,RZ
 function table(x,z,sit){bx(sc,3.7,.1,1.45,'#c8a26a',x,.9,z);[-1,1].forEach(a=>[-1,1].forEach(b=>bx(sc,.12,.85,.12,'#5a5f69',x+a*1.6,.42,z+b*.55)));
  [-1,1].forEach(s=>{bx(sc,3.7,.08,.45,'#a9744a',x,.46,z+s*1.2);[-1,1].forEach(a=>bx(sc,.12,.42,.12,'#5a5f69',x+a*1.6,.21,z+s*1.2))});
  cols.push({x0:x-2,x1:x+2,z0:z-1.7,z1:z+1.7});
- (sit||[]).forEach(a=>{const m=npc('murid');m.position.set(x+a[0],.04,z+a[1]*1.2);m.rotation.y=a[1]>0?Math.PI:0;m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m)})}
+ (sit||[]).forEach(a=>{const m=npc('murid');m.position.set(x+a[0],seatY(m),z+a[1]*1.2);m.rotation.y=a[1]>0?Math.PI:0;m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m)})}
 const TBL=[[-TX,TZ[0],[[-.9,1],[.9,-1]]],[TX,TZ[0],[[0,1]]],[-TX,TZ[1],[[-.9,-1],[.9,-1]]],[TX,TZ[1],[[.9,1],[-.9,1]]]];
 TBL.forEach(t=>table(t[0],t[1],t[2]));
 /* ---- stalls ---- */
@@ -65,9 +65,7 @@ function food(g,i,col){
  else if(i==2){msh(g,new T.CylinderGeometry(.9,.6,.4,10),'#c0693f',0,1.7,0);[['#e24b4b',-.3,0],['#ffd23f',.25,.15],['#ff9a3c',.05,-.3]].forEach(a=>msh(g,new T.IcosahedronGeometry(.28,0),a[0],a[1],2,a[2]))}
  else if(i==3){[[-1.8,'#4aa3ff'],[-.6,'#ff6b81'],[.6,'#f4c542'],[1.8,'#7ed957']].forEach(a=>{msh(g,new T.CylinderGeometry(.25,.2,.6,8),a[1],1.8,0).position.x=a[0];bx(g,.05,.5,.05,'#ffffff',a[0]+.1,2.3,0)})}
  else{[[-1.6,'#7ed957'],[-.7,'#4aa3ff']].forEach(a=>msh(g,new T.CylinderGeometry(.2,.22,.7,8),a[1],1.85,0).position.x=a[0]);bx(g,.8,.14,.6,'#ffffff',1,1.6,0);bx(g,.8,.14,.6,'#ffffff',1,1.74,0)}}
-function mkSeller(i){const f=i%2==0,c=KD.stalls[i].c,o={skin:R(SK),hc:R(HC),h:1.8,w:1.05,mouth:0,es:1,bw:4}; /* tall enough to stand above the counter */
- if(f){o.o={top:'#f6f7fb',bot:'#f6f7fb',long:1,shoe:'#2a2a30',ls:1,ap:c};o.tud=R(['#f6f7fb','#e8d6c0',c])}else{o.o={top:'#f4f6fa',bot:'#222633',shoe:'#1a1a1e',ls:1,ap:c};o.hs='short';o.stache=Math.random()<.5}
- const G=build(o);G.userData.g=f?'f':'m';return G}
+function mkSeller(i){return npc('canteen',i%2==0?'f':'m',{apronCol:KD.stalls[i].c,h:1.95})} /* Round 23: chibi canteen staff with an apron in the stall colour; tall enough that the head and shoulders stand above the counter (1.47) */
 function drawSign(i){const s=SG[i],g=s.cv.getContext('2d'),d=KD.stalls[i],r=RES[i];g.fillStyle=d.c;g.fillRect(0,0,512,128);g.fillStyle='#fff';g.font='bold '+((i+1+'. '+d.n).length>16?44:54)+'px Fredoka,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText((i+1)+'. '+d.n,256,r?44:64);
  if(r){g.font='38px sans-serif';g.fillText('⭐'.repeat(r.stars)+'☆'.repeat(3-r.stars)+'  ✔',256,98)}s.tex.needsUpdate=true}
 KD.stalls.forEach((d,i)=>{const p=POS[i],g=new T.Group(),col=d.c,th=p[2];
@@ -95,7 +93,7 @@ function mkItem(ty){const g=new T.Group(),a=(geo,c,x,y,z)=>{const m=new T.Mesh(g
  else if(ty==2){a(new T.CylinderGeometry(.075,.075,.2,8),'#7a4a24',0,.1,0);a(new T.CylinderGeometry(.035,.035,.14,8),'#7a4a24',0,.27,0);a(new T.CylinderGeometry(.045,.045,.03,8),'#c9a227',0,.36,0)}
  else{a(new T.BoxGeometry(.14,.07,.07),'#ff5fa2',0,.05,0);a(new T.ConeGeometry(.05,.08,4),'#ffd23f',.11,.05,0).rotation.z=-Math.PI/2;a(new T.ConeGeometry(.05,.08,4),'#ffd23f',-.11,.05,0).rotation.z=Math.PI/2}
  return g}
-const NM=['Kertas','Botol plastik','Botol kaca','Bungkus gula-gula'],HM=[0,1,2,3].map(t=>{const g=mkItem(t);g.visible=false;g.scale.setScalar(1.15);g.position.set(0,-.42,.12);return g});
+const NM=['Kertas','Botol plastik','Botol kaca','Bungkus gula-gula'],HM=[0,1,2,3].map(t=>{const g=mkItem(t);g.visible=false;g.scale.setScalar(.96);g.position.set(0,-.37,.1);return g});
 const BN=[];[['#3b7fd0','KERTAS',0],['#e8923a','PLASTIK',1],['#7a5236','KACA',2],['#4d6a58','BIASA',3]].forEach((a,i)=>{const x=-(DW+2.4)-i*1.4,z=RZ1-.6,b=new T.Mesh(new T.CylinderGeometry(.27,.22,.7,6),mat(a[0]));b.position.set(x,.35,z);b.castShadow=true;sc.add(b);bx(sc,.6,.08,.6,'#222222',x,.7,z);cols.push({x0:x-.32,x1:x+.32,z0:z-.32,z1:z+.32});
  sign([a[1]],a[0],'#ffffff',.9,.3,22,x,1.15,RZ1-.03,Math.PI);BN.push({x,z:z-.7,bx:x,bz:z,k:a[2]})});
 const SM=[[9.6,5.9],[-9.6,4.8],[.9,-3],[-LX,-5.6],[LX,-6],[-2.6,L0-.4]].map((a,i)=>{const x=a[0],z=a[1],k=[0,1,2,3].map(t=>{const g=mkItem(t),l=t==1||t==2;g.scale.setScalar(1.5);g.position.set(x,l?.11:0,z);g.rotation.set(0,rnd(0,6),l?Math.PI/2:0);g.visible=t==i%4;sc.add(g);return g});return{x,z,ty:i%4,cd:0,k}});
@@ -147,7 +145,7 @@ function talk(i){const d=KD.stalls[i],r=RES[i];if(r){say('Gerai ini sudah selesa
  halt=true;document.body.classList.add('mn');
  KG.show('<h3>'+d.n+'</h3><p><b>'+d.v+'</b>: Hai! '+d.t+'</p><p class="kh">Siap dalam '+d.lim+' saat tanpa kesilapan untuk bintang penuh ⭐</p><div class="rw"><button onclick="KN.go('+i+')">Mula ▶'+(STORY?' · '+WALLET.fmt(WALLET.CFG.stall[i]):'')+'</button><button class="kx" onclick="KN.shut()">Nanti dulu</button></div>')}
 const PAID=[0,0,0,0,0]; /* Round 15b: Mod Kelas stall fee paid at Mula, refunded if you leave without finishing, never charged again once finished */
-function onRes(i,res){if(!res||res.exit){if(PAID[i]){WALLET.add(WALLET.CFG.stall[i]);PAID[i]=0}shut();return}PAID[i]=0;RES[i]=res;drawSign(i);MK[i].visible=false;const n=doneN();$('scr').textContent='Gerai '+n+'/5';
+function onRes(i,res){if(!res||res.exit){if(PAID[i]){WALLET.add(WALLET.CFG.stall[i]);PAID[i]=0}shut();return}PAID[i]=0;RES[i]=res;window.lncEv&&lncEv('stall',i);drawSign(i);MK[i].visible=false;const n=doneN();$('scr').textContent='Gerai '+n+'/5';
  if(n==5){em.visible=STORY;summary()}else{shut();toast('Gerai '+KD.stalls[i].n+' siap! '+n+'/5',2400)}}
 function summary(){const rs=RES,avg=rs.reduce((a,r)=>a+r.score,0)/5;let g=null;halt=true;document.body.classList.add('mn');
  if(STORY){g=gradeOf(avg);if(!recorded){recorded=true;recRoom('kantin',avg,rs.map(r=>r.score));grade={g,s:Math.round(avg)}}}
@@ -204,8 +202,8 @@ function loop(ts){requestAnimationFrame(loop);const dt=Math.min((ts-last)/1000||
  const cc=camClamp(cp.x,cp.z,sx,sz,D,KCR);CAMP.x=cc[0];CAMP.y=CM[1]+D*CM[2];CAMP.z=cc[1]; /* Round 14: camera stays inside the Kantin */cam.position.set(CAMP.x,CAMP.y,CAMP.z);cam.lookAt(cp.x-sx*CM[3],CM[4],cp.z-sz*CM[3]);dl.position.set(cp.x+6,14,cp.z+8);dl.target.position.set(cp.x,0,cp.z);
  fades(dt);
  MK.forEach((m,i)=>{if(m.visible)m.position.set(ST[i].x,4.6+Math.abs(Math.sin(t*3))*.3,ST[i].z)});if(em.visible)em.position.set(EX.x,3.7+Math.abs(Math.sin(t*3))*.3,EX.z);
- bt-=dt;const cw=cv.clientWidth,ch=cv.clientHeight,bb=$('bub');if(bb.style.display=='block'){bv.set(P.x,P.y+2.3,P.z).project(cam);bb.style.left=(bv.x*.5+.5)*cw+'px';bb.style.top=(-bv.y*.5+.5)*ch+'px'}
- ST.forEach((s,i)=>{const near=!halt&&Math.hypot(P.x-s.x,P.z-s.z)<6.5;if(near){if(!s.line)s.line=RES[i]?'Terima kasih!':R(HI);bv.set(s.x,3.1,s.z).project(cam);s.sb.textContent=s.line;s.sb.style.left=(bv.x*.5+.5)*cw+'px';s.sb.style.top=(-bv.y*.5+.5)*ch+'px';s.sb.style.display='block'}else{s.line=null;s.sb.style.display='none'}});
+ bt-=dt;const cw=cv.clientWidth,ch=cv.clientHeight,bb=$('bub');if(bb.style.display=='block'){bv.set(P.x,P.y+headY(pm)+.14,P.z).project(cam);bb.style.left=(bv.x*.5+.5)*cw+'px';bb.style.top=(-bv.y*.5+.5)*ch+'px'}
+ ST.forEach((s,i)=>{const near=!halt&&Math.hypot(P.x-s.x,P.z-s.z)<6.5;if(near){if(!s.line)s.line=RES[i]?'Terima kasih!':R(HI);bv.set(s.x,3.25,s.z).project(cam);s.sb.textContent=s.line;s.sb.style.left=(bv.x*.5+.5)*cw+'px';s.sb.style.top=(-bv.y*.5+.5)*ch+'px';s.sb.style.display='block'}else{s.line=null;s.sb.style.display='none'}});
  const ns=nearSt(),h=$('hint'),pe=document.body.classList.contains('touch')?'Tekan E':'E',bn=carry>=0&&nearBin(),sn=carry<0&&nearLit();
  if(halt)h.style.display='none';else if(bn){h.textContent=pe+' · Buang sampah';h.style.display='block'}else if(sn){h.textContent=pe+' · Ambil sampah';h.style.display='block'}else if(ns>=0){h.textContent=RES[ns]?'Gerai '+(ns+1)+' sudah selesai ✔':pe+' · Cakap dengan '+KD.stalls[ns].v;h.style.display='block'}else if(nearDoor()){h.textContent=pe+(!STORY||doneN()==5?' · Keluar kantin':' · Pintu keluar ('+doneN()+'/5 gerai)');h.style.display='block'}else h.style.display='none';
  drawMM();ren.render(sc,cam)}requestAnimationFrame(loop);

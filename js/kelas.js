@@ -70,7 +70,7 @@ const DK=K.dk||['#d9b88a','#5a5f69','#b79866'];function desk(x,z){bx(sc,3.4,.08,
  bx(sc,.45,.06,.32,'#4aa3ff',x-.8,.95,z);bx(sc,.45,.06,.32,'#e24b4b',x+.8,.95,z-.05);
  [-.8,.8].forEach(o=>{chair(x+o,z+1);SEATS.push([x+o,z+1.05])});cols.push({x0:x-1.8,x1:x+1.8,z0:z-.6,z1:z+1.4})}
 if(!LIB)[[-3,-2],[3,-2],[-3,2.4],[3,2.4]].forEach(a=>desk(a[0],a[1]));
-SEATS.filter(s=>!(Math.abs(s[0]-QC[0])<.01&&Math.abs(s[1]-(QC[1]+.05))<.01)).sort(()=>Math.random()-.5).slice(0,5).forEach(s=>{const m=npc('murid');m.position.set(s[0],.04,s[1]);m.rotation.y=Math.PI;m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m)});
+SEATS.filter(s=>!(Math.abs(s[0]-QC[0])<.01&&Math.abs(s[1]-(QC[1]+.05))<.01)).sort(()=>Math.random()-.5).slice(0,5).forEach(s=>{const m=npc('murid');m.position.set(s[0],seatY(m),s[1]);m.rotation.y=Math.PI;m.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);sc.add(m)});
 /* ---- small things: red bin, plant, two balls ---- */
 if(!LIB)(()=>{const x=-RX+.8,z=RZ1-.8,b=new T.Mesh(new T.CylinderGeometry(.3,.24,.55,8),mat('#e0463a'));b.position.set(x,.275,z);b.castShadow=true;sc.add(b);cols.push({x0:x-.34,x1:x+.34,z0:z-.34,z1:z+.34});if(LAB)return;
  const p=new T.Mesh(new T.CylinderGeometry(.28,.2,.45,6),mat('#c0693f')),f=new T.Mesh(new T.IcosahedronGeometry(.42,0),mat('#3f9d54'));p.position.set(-RX+.9,.225,RZ0+.9);f.position.set(-RX+.9,.85,RZ0+.9);sc.add(p,f);cols.push({x0:-RX+.58,x1:-RX+1.22,z0:RZ0+.58,z1:RZ0+1.22});
@@ -177,14 +177,14 @@ function loop(ts){requestAnimationFrame(loop);const dt=Math.min((ts-last)/1000||
  P.x=Math.max(-RX+.4,Math.min(RX-.4,P.x));P.z=Math.max(RZ0+.4,Math.min(RZ1-.4,P.z)); /* never outside the room */
  cy=camStep(cy,dt,mv,mv&&Math.hypot(P.x-ox,P.z-oz)<CAMC.block*want,P.f,hold);hold-=dt;
  if((keys.Space||jmp)&&P.y<=0)P.vy=6.8;P.vy-=22*dt;P.y+=P.vy*dt;if(P.y<=0){P.y=0;P.vy=0}
- pm.position.set(P.x,sitting?.04:P.y,P.z);pm.rotation.y=P.f;if(sitting)pm.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);else anim(pm,t,mv&&P.y==0);
+ pm.position.set(P.x,sitting?seatY(pm):P.y,P.z);pm.rotation.y=P.f;if(sitting)pm.userData.legs.forEach(l=>l.rotation.x=-Math.PI/2);else anim(pm,t,mv&&P.y==0);
  const D=CM[0]*(cam.aspect<1?1.15:1);cp.x+=(P.x-cp.x)*Math.min(1,dt*10);cp.z+=(P.z-cp.z)*Math.min(1,dt*10);const sx=Math.sin(cy),sz=Math.cos(cy);
  const cc=camIn(cp.x,cp.z,sx,sz,D,RX,RZ0,RZ1,.3);CAMP.x=cc[0];CAMP.y=CM[1]+D*CM[2];CAMP.z=cc[1];cam.position.set(CAMP.x,CAMP.y,CAMP.z);cam.lookAt(cp.x-sx*CM[3],CM[4],cp.z-sz*CM[3]);dl.position.set(cp.x+6,14,cp.z+8);dl.target.position.set(cp.x,0,cp.z);
  fades(dt);
  em.position.set(EX.x,3.2+Math.abs(Math.sin(t*3))*.3,EX.z);qm.visible=!sitting&&!LAB;qm.position.set(QC[0],1.9+Math.abs(Math.sin(t*3))*.25,QC[1]);STM.forEach((m,i)=>m.position.set(LB.ST[i][0],2.1+Math.abs(Math.sin(t*3+i))*.25,LB.ST[i][1]));
- const bb=$('bub');if(bb.style.display=='block'){bv.set(P.x,P.y+2.3,P.z).project(cam);bb.style.left=(bv.x*.5+.5)*cv.clientWidth+'px';bb.style.top=(-bv.y*.5+.5)*cv.clientHeight+'px'}
+ const bb=$('bub');if(bb.style.display=='block'){bv.set(P.x,P.y+headY(pm)+.14,P.z).project(cam);bb.style.left=(bv.x*.5+.5)*cv.clientWidth+'px';bb.style.top=(-bv.y*.5+.5)*cv.clientHeight+'px'}
  const cw=cv.clientWidth,ch=cv.clientHeight,near=!halt&&Math.hypot(P.x-TCH.position.x,P.z-TCH.position.z)<5;
- if(near){if(!tline)tline=R(K.teach);bv.set(TCH.position.x,2.9,TCH.position.z).project(cam);sb.textContent=tline;sb.style.left=(bv.x*.5+.5)*cw+'px';sb.style.top=(-bv.y*.5+.5)*ch+'px';sb.style.display='block'}else{tline=null;sb.style.display='none'}
+ if(near){if(!tline)tline=R(K.teach);bv.set(TCH.position.x,TCH.position.y+headY(TCH)+.14,TCH.position.z).project(cam);sb.textContent=tline;sb.style.left=(bv.x*.5+.5)*cw+'px';sb.style.top=(-bv.y*.5+.5)*ch+'px';sb.style.display='block'}else{tline=null;sb.style.display='none'}
  const h=$('hint'),pe=document.body.classList.contains('touch')?'Tekan E':'E';
  const nt=nearTr();if(!halt&&nearDoor()){h.textContent=pe+' · Keluar kelas';h.style.display='block'}else if(!halt&&nt&&nt[3]){h.textContent=pe+' · '+nt[3];h.style.display='block'}else h.style.display='none';
  drawMM();ren.render(sc,cam)}requestAnimationFrame(loop);
